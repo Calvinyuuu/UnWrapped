@@ -1,20 +1,9 @@
 'use client';
 import { socials } from '../constants'
+import Link from 'next/link'
 
 const Hero: React.FC = () => {
-    const title = "Welcome to UnWrapped";
-
-    const handleAuth = async () => {
-        try {
-            const authenticate = async () => {
-                await fetch('/api/auth', {
-                    method: 'GET'
-                })
-            }
-        } catch (error) {
-            console.error('Error authorizing with Spotify:', error);
-        }
-    }
+    const title = 'Welcome to UnWrapped';
 
     return (
         <div className="h-screen flex items-center justify-center">
@@ -52,9 +41,7 @@ const Hero: React.FC = () => {
                         ))}
                     </div>
                 </div>
-                <button onClick={handleAuth} className="mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Authorize with Spotify
-                </button>
+                <Link className="mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="/auth">Dashboard</Link>
             </div>
         </div >
     );

@@ -1,31 +1,26 @@
-'use server'
-// import { NextRequest, NextResponse } from "next/server";
-import { redirect } from 'next/navigation'
+'use server';
+import { NextResponse } from "next/server";
+import { cookies } from 'next/headers'
 
 export async function GET() {
-    const redirectUri: string = "http://localhost:3000";
-    const scope = "streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state user-library-read user-read-recently-played user-top-read";
+    const scope = 'streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state user-library-read user-read-recently-played user-top-read';
     const state = generateRandomString(16);
+    cookies().set('state', state, { httpOnly: true });
     let authUrl: string | null = null;
     try {
         const queryParams = new URLSearchParams({
             client_id: process.env.CLIENT_ID!,
-            redirect_uri: redirectUri,
+            redirect_uri: process.env.REDIRECT_URI!,
             response_type: 'code',
             state: state,
             scope: scope,
         });
-        // const authUrl = `https://accounts.spotify.com/authorize?${queryParams}`;
         authUrl = `https://accounts.spotify.com/authorize?${queryParams}`;
-        // console.log(authUrl);
-        // return NextResponse.redirect(authUrl);
     } catch (error) {
         console.error('Error redirecting to Spotify authorization:', error);
         return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500 });
-    } finally {
-        if (authUrl)
-            return redirect(authUrl);
     }
+    return NextResponse.json({ url: authUrl, state: state }, { status: 200 });
 }
 
 //function to generate a random string with a given length
