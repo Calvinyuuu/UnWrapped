@@ -11,10 +11,9 @@ export async function POST(request: NextRequest) {
             }
         });
         const data = await response.json();
-        console.log(data);
+        return new Response(JSON.stringify(data), { status: 200 });
     } catch (error) {
         console.log(error);
         return new Response('Unauthorized', { status: 401 });
     }
-    return new Response('Done', { status: 200 });
 }

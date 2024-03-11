@@ -1,8 +1,10 @@
 'use client'
 import { useSearchParams } from 'next/navigation'
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'
-import { get } from 'http';
+import dynamic from 'next/dynamic';
+import { ResponseData } from '../../interfaces/songProp';
+const Card = dynamic(() => import('../../components/Card'), { ssr: true });
 
 //function to handle the POST request to trade for the access token and to display the information traded with the access token
 const Page: React.FC = () => {
@@ -16,6 +18,8 @@ const Page: React.FC = () => {
         state: state,
         code: code
     }
+    // Define state to hold the data
+    const [songData, setSongData] = useState<ResponseData>({ items: [] });
 
     useEffect(() => {
         const getData = async () => {
@@ -46,6 +50,8 @@ const Page: React.FC = () => {
                     },
                     body: JSON.stringify({ access_token }),
                 });
+                const responseData = await response.json() as ResponseData;
+                setSongData(responseData as ResponseData);
             } catch (error) {
                 console.log(error);
             }
@@ -60,7 +66,7 @@ const Page: React.FC = () => {
 
     return (
         <div>
-            redirected
+            <Card {...songData} />
         </div>
     );
 };

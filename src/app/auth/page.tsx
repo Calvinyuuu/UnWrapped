@@ -22,7 +22,7 @@ const Page: React.FC = () => {
             }
         }
         auth();
-    }, [])
+    })
 
 
     return (

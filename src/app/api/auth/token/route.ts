@@ -17,7 +17,6 @@ export async function POST(request: NextRequest) {
         return new Response('Unauthorized', { status: 401 });
     }
 }
-
 //function to request the token
 async function requestToken(code: string) {
     const encoder = new TextEncoder();

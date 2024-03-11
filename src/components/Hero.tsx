@@ -1,6 +1,7 @@
 'use client';
 import { socials } from '../constants'
 import Link from 'next/link'
+import Image from 'next/image';
 
 const Hero: React.FC = () => {
     const title = 'Welcome to UnWrapped';
@@ -32,9 +33,11 @@ const Hero: React.FC = () => {
                                 onClick={() => window.open(soc.link, "_blank")}
                                 className="w-10 h-10 flex items-center cursor-pointer"
                             >
-                                <img
+                                <Image
                                     src={soc.icon}
                                     alt="source code"
+                                    width={100}
+                                    height={100}
                                     className="w-4/5 h-4/5 object-contain"
                                 />
                             </div>
