@@ -8,39 +8,20 @@ const Card = dynamic(() => import('../../components/Card'), { ssr: true });
 
 //function to handle the POST request to trade for the access token and to display the information traded with the access token
 const Page: React.FC = () => {
+    const router = useRouter();
     //get the state and code from the URL
     const searchParams = useSearchParams();
-    const state = searchParams.get('state');
-    const code = searchParams.get('code');
-    const router = useRouter();
-    //create the body of the request
-    const data = {
-        state: state,
-        code: code
-    }
+    const state: string = searchParams.get('state') as string;
+    const code: string = searchParams.get('code') as string;
+
     // Define state to hold the data
-    const [songData, setSongData] = useState<ResponseData>({ items: [] });
+    const [songDataShort, setSongDataShort] = useState<ResponseData>({ items: [] });
+    const [songDataMedium, setSongDataMedium] = useState<ResponseData>({ items: [] });
+    const [songDataLong, setSongDataLong] = useState<ResponseData>({ items: [] });
 
     useEffect(() => {
         const getData = async () => {
-
-            let access_token = '';
-
-            try {
-                const response = await fetch('/api/auth/token', {
-                    method: "POST",
-                    mode: 'no-cors',
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                });
-                const responseData = await response.json();
-                access_token = responseData.token;
-            } catch (error) {
-                console.log(error);
-            }
-            //should i store the token in a cookie? or should i just request the data from the api?
+            let access_token = await getAccessCode(state, code);
             try {
                 const response = await fetch('/api/data', {
                     method: "POST",
@@ -48,10 +29,39 @@ const Page: React.FC = () => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ access_token }),
+                    body: JSON.stringify({ access_token: access_token, time_range: 'short_term' }),
                 });
                 const responseData = await response.json() as ResponseData;
-                setSongData(responseData as ResponseData);
+                console.log(responseData.items.slice(0, 3));
+                setSongDataShort(responseData as ResponseData);
+            } catch (error) {
+                console.log(error);
+            }
+            try {
+                const response = await fetch('/api/data', {
+                    method: "POST",
+                    mode: 'no-cors',
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ access_token: access_token, time_range: 'medium_term' }),
+                });
+                const responseData = await response.json() as ResponseData;
+                setSongDataMedium(responseData as ResponseData);
+            } catch (error) {
+                console.log(error);
+            }
+            try {
+                const response = await fetch('/api/data', {
+                    method: "POST",
+                    mode: 'no-cors',
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ access_token: access_token, time_range: 'long_term' }),
+                });
+                const responseData = await response.json() as ResponseData;
+                setSongDataLong(responseData as ResponseData);
             } catch (error) {
                 console.log(error);
             }
@@ -66,9 +76,43 @@ const Page: React.FC = () => {
 
     return (
         <div>
-            <Card {...songData} />
+            <div>
+                <h1>short</h1>
+                <Card {...songDataShort} />
+            </div>
+            <div>
+                <h1>medium</h1>
+                <Card {...songDataMedium} />
+            </div>
+            <div>
+                <h1>long</h1>
+                <Card {...songDataLong} />
+            </div>
         </div>
     );
 };
+
+async function getAccessCode(state: string, code: string) {
+    //create the body of the request
+    const data = {
+        state: state,
+        code: code
+    };
+    try {
+        const response = await fetch('/api/auth/token', {
+            method: "POST",
+            mode: 'no-cors',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+        const responseData = await response.json();
+        return responseData.token;
+    } catch (error) {
+        console.log(error);
+    }
+    return '';
+}
 
 export default Page;
