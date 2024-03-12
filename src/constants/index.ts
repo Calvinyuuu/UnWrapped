@@ -3,8 +3,18 @@
 const PATHS = {
   logo: '/assets/logo.svg',
   github: '/assets/github.png',
-  linkedin: '/assets/linkedin.png'
+  linkedin: '/assets/linkedin.png',
+  spotify: '/assets/Spotify_Logo_CMYK_Black.png',
 }
+
+export const images = [
+  {
+    name: "spotify",
+    icon: PATHS.spotify,
+    width: 100,
+    height: 100,
+  },
+]
 
 export const socials = [
   {

@@ -2,19 +2,21 @@ interface ResponseData {
     items: Item[];
 }
 interface Item {
-    album_type: string;
+    album: Album;
     artists: Artist[];
     external_urls: {
         spotify: string;
     };
     href: string;
     id: string;
+    name: string;
+    uri: string;
+}
+interface Album {
+    album_type: string;
+    artists: Artist[];
     images: Image[];
     name: string;
-    release_date: string;
-    release_date_precision: string;
-    total_tracks: number;
-    type: string;
     uri: string;
 }
 interface Image {
