@@ -1,5 +1,5 @@
 import { ResponseData } from '../interfaces/songProp';
-import CardComponentBig from './CardComponentBig';
+import CardComponentCarousel from './CardComponentCarousel';
 import React from 'react';
 
 const Card: React.FC<ResponseData> = (data: ResponseData) => {
@@ -9,9 +9,7 @@ const Card: React.FC<ResponseData> = (data: ResponseData) => {
         return (
             <div>
                 <div>
-                    {tracksWithHeaders.map((item, index) => (
-                        <CardComponentBig key={index} {...item} />
-                    ))}
+                    <CardComponentCarousel items={tracksWithHeaders} />
                 </div>
                 {/* <div>
                     {tracksInList.map((item, index) => (
