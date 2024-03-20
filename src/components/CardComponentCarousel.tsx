@@ -1,13 +1,13 @@
 /** Code from https://www.hover.dev/components/carousels */
-import { ResponseData } from '../interfaces/songProp';
+import { ResponseData, Item } from '../interfaces/songProp';
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
 
 let imgs: string[] = [];
+let items: Item[] = [];
 
 const ONE_SECOND = 1000;
 const AUTO_DELAY = ONE_SECOND * 10;
-const DRAG_BUFFER = 50;
 
 const SPRING_OPTIONS = {
     type: "spring",
@@ -17,6 +17,7 @@ const SPRING_OPTIONS = {
 };
 
 const CardComponentBig: React.FC<ResponseData> = (data) => {
+    items = data.items;
     const [imgIndex, setImgIndex] = useState(0);
 
     const dragX = useMotionValue(0);
@@ -48,39 +49,9 @@ const CardComponentBig: React.FC<ResponseData> = (data) => {
 
         return () => clearInterval(intervalRef);
     }, []);
-
-    const onDragEnd = () => {
-        const x = dragX.get();
-
-        if (x <= -DRAG_BUFFER && imgIndex < imgs.length - 1) {
-            setImgIndex((pv) => pv + 1);
-        } else if (x >= DRAG_BUFFER && imgIndex > 0) {
-            setImgIndex((pv) => pv - 1);
-        }
-    };
     return (
-        <div className="relative overflow-hidden bg-neutral-950 py-8 ">
-            <motion.div
-                drag="x"
-                dragConstraints={{
-                    left: 0,
-                    right: 0,
-                }}
-                style={{
-                    x: dragX,
-                }}
-                animate={{
-                    translateX: `-${imgIndex * 100}%`,
-                }}
-                transition={SPRING_OPTIONS}
-                onDragEnd={onDragEnd}
-                className="flex cursor-grab items-center active:cursor-grabbing"
-            >
-                <Images imgIndex={imgIndex} />
-            </motion.div>
-
-            <Dots imgIndex={imgIndex} setImgIndex={setImgIndex} />
-            <GradientEdges />
+        <div className="flex justify-between items-center mb-5">
+            <Images imgIndex={imgIndex} />
         </div>
     );
 };
@@ -90,65 +61,43 @@ const Images = ({ imgIndex }: { imgIndex: number }) => {
         <>
             {imgs.map((imgSrc, idx) => {
                 return (
-                    <motion.div
-                        key={idx}
-                        style={{
-                            backgroundImage: `url(${imgSrc})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                        }}
-                        animate={{
-                            scale: imgIndex === idx ? 0.95 : 0.85,
-                        }}
-                        transition={SPRING_OPTIONS}
-                        className="aspect-video w-screen shrink-0 rounded-xl bg-neutral-800 object-cover"
-                    />
+                    //come back to this to fix the aspect ratio
+                    <div className='flex flex-col h-[40vh] rounded-xl bg-neutral-800'>
+                        <motion.div
+                            key={idx}
+                            //controls the images properties
+                            style={{
+                                backgroundImage: `url(${imgSrc})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                            }}
+                            //this is the "focus" animation for the image
+                            animate={{
+                                scale: imgIndex === idx ? 0.95 : 0.85,
+                            }}
+                            transition={SPRING_OPTIONS}
+                            className="h-[30vh] aspect-square bg-neutral-800 object-cover"
+                        />
+
+                        <div className='text-center'>
+                            {items[idx].name}
+                        </div>
+                        <div className='flex justify-center'>
+
+                            {items[idx].artists.map((artist, index) => (
+                                <div key={index} className="mx-2">
+                                    {artist.name}
+                                </div>
+                            ))}
+                        </div>
+                        <div className='text-center'>
+                            {items[idx].album.name}
+                        </div>
+                    </div>
                 );
             })}
         </>
     );
 };
-
-const Dots = ({
-    imgIndex,
-    setImgIndex,
-}: {
-    imgIndex: number;
-    setImgIndex: Dispatch<SetStateAction<number>>;
-}) => {
-    return (
-        <div className="mt-4 flex w-full justify-center gap-2">
-            {imgs.map((_, idx) => {
-                return (
-                    <button
-                        key={idx}
-                        onClick={() => setImgIndex(idx)}
-                        className={`h-3 w-3 rounded-full transition-colors ${idx === imgIndex ? "bg-neutral-50" : "bg-neutral-500"
-                            }`}
-                    />
-                );
-            })}
-        </div>
-    );
-};
-
-const GradientEdges = () => {
-    return (
-        <>
-            <div className="pointer-events-none absolute bottom-0 left-0 top-0 w-[10vw] max-w-[100px] bg-gradient-to-r from-neutral-950/50 to-neutral-950/0" />
-            <div className="pointer-events-none absolute bottom-0 right-0 top-0 w-[10vw] max-w-[100px] bg-gradient-to-l from-neutral-950/50 to-neutral-950/0" />
-        </>
-    );
-};
-
-function extractFirstImages(data: ResponseData): string[] {
-    return data.items.map(item => {
-        if (item.album.images.length > 0) {
-            return item.album.images[0].url;
-        } else {
-            return '/default-image.jpg';
-        }
-    });
-}
 
 export default CardComponentBig;

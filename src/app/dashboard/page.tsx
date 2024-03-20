@@ -75,20 +75,11 @@ const Page: React.FC = () => {
     }, [])
 
     return (
-        <div>
-            <div>
-                <h1>short</h1>
-                <Card {...songDataShort} />
-            </div>
-            <div>
-                <h1>medium</h1>
-                <Card {...songDataMedium} />
-            </div>
-            <div>
-                <h1>long</h1>
-                <Card {...songDataLong} />
-            </div>
-        </div>
+        <>
+            <Card {...songDataShort} />
+            <Card {...songDataMedium} />
+            <Card {...songDataLong} />
+        </>
     );
 };
 
