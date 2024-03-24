@@ -76,9 +76,9 @@ const Page: React.FC = () => {
 
     return (
         <>
-            <Card {...songDataShort} />
-            <Card {...songDataMedium} />
-            <Card {...songDataLong} />
+            <Card {...songDataShort} dataRange="Last Month" />
+            <Card {...songDataMedium} dataRange="Last Six Months" />
+            <Card {...songDataLong} dataRange="Last Couple Years" />
         </>
     );
 };

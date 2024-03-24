@@ -5,12 +5,19 @@ const PATHS = {
   github: '/assets/github.png',
   linkedin: '/assets/linkedin.png',
   spotify: '/assets/Spotify_Logo_CMYK_Black.png',
+  spotifyGreen: '/assets/Spotify_Logo_RGB_Green.png',
 }
 
 export const images = [
   {
     name: "spotify",
     icon: PATHS.spotify,
+    width: 100,
+    height: 100,
+  },
+  {
+    name: "spotifyGreen",
+    icon: PATHS.spotifyGreen,
     width: 100,
     height: 100,
   },

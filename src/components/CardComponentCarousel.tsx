@@ -1,6 +1,6 @@
 /** Code from https://www.hover.dev/components/carousels */
 import { ResponseData, Item } from '../interfaces/songProp';
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
 
 let imgs: string[] = [];
@@ -62,7 +62,7 @@ const Images = ({ imgIndex }: { imgIndex: number }) => {
             {imgs.map((imgSrc, idx) => {
                 return (
                     //come back to this to fix the aspect ratio
-                    <div className='flex flex-col h-[40vh] rounded-xl bg-neutral-800'>
+                    <div className='flex flex-col items-center h-[30vh] w-1/3 rounded-xl bg-neutral-800'>
                         <motion.div
                             key={idx}
                             //controls the images properties
@@ -76,21 +76,21 @@ const Images = ({ imgIndex }: { imgIndex: number }) => {
                                 scale: imgIndex === idx ? 0.95 : 0.85,
                             }}
                             transition={SPRING_OPTIONS}
-                            className="h-[30vh] aspect-square bg-neutral-800 object-cover"
+                            className="bg-neutral-800 object-cover h-[15vh] w-[15vh] pt-2"
                         />
 
-                        <div className='text-center'>
+                        <div className='text-center pt-2 text-wrap'>
                             {items[idx].name}
                         </div>
                         <div className='flex justify-center'>
 
                             {items[idx].artists.map((artist, index) => (
-                                <div key={index} className="mx-2">
+                                <div key={index} className="mx-2 text-wrap">
                                     {artist.name}
                                 </div>
                             ))}
                         </div>
-                        <div className='text-center'>
+                        <div className='text-center text-wrap'>
                             {items[idx].album.name}
                         </div>
                     </div>
