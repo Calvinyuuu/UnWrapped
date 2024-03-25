@@ -20,6 +20,7 @@ const Page: React.FC = () => {
     const [songDataLong, setSongDataLong] = useState<ResponseData>({ items: [] });
 
     useEffect(() => {
+        window.history.pushState({}, "", "/dashboard");
         const getData = async () => {
             let access_token = await getAccessCode(state, code);
             try {

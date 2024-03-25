@@ -3,11 +3,11 @@ import Image from 'next/image';
 import { useMediaQuery } from 'react-responsive';
 
 const CardList: React.FC<ResponseData> = (data) => {
-    const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
+    const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
     return (
-        <div className="xl:h-[50vh] lg:h-[100vh] overflow-hidden">
+        <div className="xl:h-[50vh] lg:h-[60vh] overflow-hidden">
             {/* remember to have a default height/width if using media breakpoints */}
-            <div className="overflow-y-scroll lg:h-[60vh] md:h-[85vh] h-[80vh]">
+            <div className="overflow-y-scroll lg:h-[60vh] md:h-[60vh] h-[80vh]">
                 <ul className="divide-y divide-gray-200">
                     {data.items.map((item, index) => (
                         <li key={index} className="py-4">
