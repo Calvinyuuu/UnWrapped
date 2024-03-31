@@ -1,14 +1,14 @@
 import { ResponseData } from '../interfaces/songProp';
 import CardComponentCarousel from './CardComponentCarousel';
 import CardComponentList from './CardComponentList';
+import Summary from './Summary';
 import React from 'react';
 import { useMediaQuery } from 'react-responsive';
 import Image from 'next/image';
 import { images } from '../constants'
 
-const Card: React.FC<ResponseData & { dataRange: string }> = ({ items, dataRange }) => {
+const Card: React.FC<ResponseData & { dataRange: string } & { genreData: Map<string, number> }> = ({ items, dataRange, genreData }) => {
     const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
-
     if (items && items.length > 0) {
         const tracksWithHeaders = items.slice(0, 3);
         const tracksInList = items.slice(3, 10);
@@ -23,6 +23,7 @@ const Card: React.FC<ResponseData & { dataRange: string }> = ({ items, dataRange
                             height={images[1].height}
                         />
                         <h1 className='text-center'>{dataRange}</h1>
+                        <Summary genreData={genreData} />
                     </div>
                     <CardComponentList items={items} />
                 </div>

@@ -62,7 +62,7 @@ const Images = ({ imgIndex }: { imgIndex: number }) => {
             {imgs.map((imgSrc, idx) => {
                 return (
                     //come back to this to fix the aspect ratio
-                    <div className='flex flex-col items-center h-[30vh] w-1/3 rounded-xl bg-neutral-800'>
+                    <div key={idx} className='flex flex-col items-center h-[30vh] w-1/3 rounded-xl bg-neutral-800'>
                         <motion.div
                             key={idx}
                             //controls the images properties
