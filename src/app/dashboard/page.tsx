@@ -25,9 +25,9 @@ const Page: React.FC = () => {
     const [songDataMedium, setSongDataMedium] = useState<ResponseData>({ items: [] });
     const [songDataLong, setSongDataLong] = useState<ResponseData>({ items: [] });
 
-    const [genreDataShort, setGenreDataShort] = useState<Map<string, number>>(new Map<string, number>);
-    const [genreDataMedium, setGenreDataMedium] = useState<Map<string, number>>(new Map<string, number>);
-    const [genreDataLong, setGenreDataLong] = useState<Map<string, number>>(new Map<string, number>);
+    const [genreDataShort, setGenreDataShort] = useState<Map<string, number>>(new Map<string, number>());
+    const [genreDataMedium, setGenreDataMedium] = useState<Map<string, number>>(new Map<string, number>());
+    const [genreDataLong, setGenreDataLong] = useState<Map<string, number>>(new Map<string, number>());
 
     useEffect(() => {
         // window.history.pushState({}, "", "/dashboard");
@@ -48,12 +48,12 @@ const Page: React.FC = () => {
             setGenreDataLong(genresLong!);
         }
         //if the state is not 'error=access_denied' then getToken the state and code
-        if (state != 'error=access_denied') {
+        if (state !== 'error=access_denied') {
             getData();
         } else {
             router.push('/');
         }
-    }, [])
+    }, []);
     return (
         <>
             <Card {...songDataShort} dataRange="Last Month" genreData={genreDataShort} />
@@ -65,17 +65,12 @@ const Page: React.FC = () => {
 
 async function getAccessCode(state: string, code: string) {
     //create the body of the request
-    const data = {
-        state: state,
-        code: code
-    };
+    const data = { state: state, code: code };
     try {
         const response = await fetch('/api/auth/token', {
             method: "POST",
             mode: 'no-cors',
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json", },
             body: JSON.stringify(data),
         });
         const responseData = await response.json();
@@ -92,9 +87,7 @@ async function getSongData(access_token: string, time_range: string) {
             const response = await fetch('/api/data', {
                 method: "POST",
                 mode: 'no-cors',
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json", },
                 body: JSON.stringify({ access_token: access_token, time_range: time_range }),
             });
             const responseData = await response.json() as ResponseData;
@@ -106,19 +99,19 @@ async function getSongData(access_token: string, time_range: string) {
 }
 
 async function getTotalGenres(access_token: string, time_range: string) {
-    try {
-        const response = await fetch('/api/artists', {
-            method: "POST",
-            mode: 'no-cors',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ access_token: access_token, time_range: time_range }),
-        });
-        const artistData = await response.json() as ArtistData;
-        return tallyGenres(artistData);
-    } catch (error) {
-        console.log(error);
+    if (access_token) {
+        try {
+            const response = await fetch('/api/artists', {
+                method: "POST",
+                mode: 'no-cors',
+                headers: { "Content-Type": "application/json", },
+                body: JSON.stringify({ access_token: access_token, time_range: time_range }),
+            });
+            const artistData = await response.json() as ArtistData;
+            return tallyGenres(artistData);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

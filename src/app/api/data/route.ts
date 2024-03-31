@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     const authorization = 'Bearer ' + token.access_token;
     let endpoint = 'https://api.spotify.com/v1/me/top/tracks?limit=10';
     if (token.time_range) {
-        endpoint += '&time_range=' + token.time_range;
+        endpoint += `&time_range=${token.time_range}`;
     }
     try {
         const response = await fetch(endpoint, {

@@ -17,10 +17,10 @@ const Card: React.FC<ResponseData & { dataRange: string } & { genreData: Map<str
                 <div className="p-8 mx-auto h-[95vh] bg-neutral-950 mb-10">
                     <div className="grid grid-cols-2 items-center pb-2">
                         <Image
-                            src={images[1].icon}
+                            src={images[0].icon}
                             alt="spotify logo"
-                            width={images[1].width}
-                            height={images[1].height}
+                            width={images[0].width}
+                            height={images[0].height}
                         />
                         <h1 className='text-center'>{dataRange}</h1>
                         <Summary genreData={genreData} />
@@ -33,10 +33,10 @@ const Card: React.FC<ResponseData & { dataRange: string } & { genreData: Map<str
                 <div className="p-8 w-4/5 mx-auto h-[100vh] bg-neutral-950 mb-3">
                     <div className="grid grid-cols-3">
                         <Image
-                            src={images[1].icon}
+                            src={images[0].icon}
                             alt="spotify logo"
-                            width={images[1].width}
-                            height={images[1].height}
+                            width={images[0].width}
+                            height={images[0].height}
                             className="mb-5"
                         />
                         <h1 className='text-center'>{dataRange}</h1>
@@ -49,10 +49,12 @@ const Card: React.FC<ResponseData & { dataRange: string } & { genreData: Map<str
         }
     } else {
         return (
-            <div className="flex flex-col h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white mx-auto" role="status">
-                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                    Loading...
-                </span>
+            <div className="h-[33vh]">
+                <div className="flex flex-col h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white mx-auto" role="status">
+                    <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                        Loading...
+                    </span>
+                </div>
             </div>
         );
     }
