@@ -3,8 +3,8 @@ import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic';
-import { ResponseData } from '../../interfaces/songProp';
-import { ArtistData } from '../../interfaces/artistProp';
+import { ResponseData } from '../../interfaces/songInterface';
+import { getAccessCode, getSongData, getTotalGenres, tallyGenres } from './apiFunctions';
 const Card = dynamic(() => import('../../components/Card'), { ssr: true });
 
 //function to handle the POST request to trade for the access token and to display the information traded with the access token
@@ -33,7 +33,6 @@ const Page: React.FC = () => {
         // window.history.pushState({}, "", "/dashboard");
         const getData = async () => {
             let access_token = await getAccessCode(state, code);
-
             const songsShort = await getSongData(access_token, 'short_term');
             const songsMedium = await getSongData(access_token, 'medium_term');
             const songsLong = await getSongData(access_token, 'long_term');
@@ -62,75 +61,6 @@ const Page: React.FC = () => {
         </>
     );
 };
-
-async function getAccessCode(state: string, code: string) {
-    //create the body of the request
-    const data = { state: state, code: code };
-    try {
-        const response = await fetch('/api/auth/token', {
-            method: "POST",
-            mode: 'no-cors',
-            headers: { "Content-Type": "application/json", },
-            body: JSON.stringify(data),
-        });
-        const responseData = await response.json();
-        return responseData.token;
-    } catch (error) {
-        console.log(error);
-    }
-    return '';
-}
-
-async function getSongData(access_token: string, time_range: string) {
-    if (access_token) {
-        try {
-            const response = await fetch('/api/data', {
-                method: "POST",
-                mode: 'no-cors',
-                headers: { "Content-Type": "application/json", },
-                body: JSON.stringify({ access_token: access_token, time_range: time_range }),
-            });
-            const responseData = await response.json() as ResponseData;
-            return responseData;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-}
-
-async function getTotalGenres(access_token: string, time_range: string) {
-    if (access_token) {
-        try {
-            const response = await fetch('/api/artists', {
-                method: "POST",
-                mode: 'no-cors',
-                headers: { "Content-Type": "application/json", },
-                body: JSON.stringify({ access_token: access_token, time_range: time_range }),
-            });
-            const artistData = await response.json() as ArtistData;
-            return tallyGenres(artistData);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-}
-
-function tallyGenres(data: ArtistData) {
-    if (data.items) {
-        let genreCounts = new Map<string, number>();
-
-        data.items.forEach(item => {
-            item.genres.forEach(genre => {
-                if (genreCounts.has(genre)) {
-                    genreCounts.set(genre, genreCounts.get(genre)! + 1);
-                } else {
-                    genreCounts.set(genre, 1);
-                }
-            });
-        });
-        return genreCounts;
-    }
-}
 
 
 export default Page;

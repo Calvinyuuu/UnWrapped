@@ -1,4 +1,4 @@
-import { ResponseData } from '../interfaces/songProp';
+import { ResponseData } from '../interfaces/songInterface';
 import Image from 'next/image';
 import { useMediaQuery } from 'react-responsive';
 

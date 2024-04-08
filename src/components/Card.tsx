@@ -1,4 +1,5 @@
-import { ResponseData } from '../interfaces/songProp';
+import { ResponseData } from '../interfaces/songInterface';
+import { CardData } from '../interfaces/cardInterface';
 import CardComponentCarousel from './CardComponentCarousel';
 import CardComponentList from './CardComponentList';
 import Summary from './Summary';
@@ -6,37 +7,36 @@ import React from 'react';
 import { useMediaQuery } from 'react-responsive';
 import Image from 'next/image';
 import { images } from '../constants'
+// { dataRange: string } & { genreData: Map<string, number> }
 
-const Card: React.FC<ResponseData & { dataRange: string } & { genreData: Map<string, number> }> = ({ items, dataRange, genreData }) => {
+const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }) => {
     const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
     if (items && items.length > 0) {
         const tracksWithHeaders = items.slice(0, 3);
         const tracksInList = items.slice(3, 10);
-        if (isMobile) {
-            return (
+        return (
+            isMobile ? (
                 <div className="p-8 mx-auto h-[95vh] bg-neutral-950 mb-10">
                     <div className="grid grid-cols-2 items-center pb-2">
                         <Image
-                            src={images[0].icon}
+                            src={images[1].icon}
                             alt="spotify logo"
-                            width={images[0].width}
-                            height={images[0].height}
+                            width={images[1].width}
+                            height={images[1].height}
                         />
                         <h1 className='text-center'>{dataRange}</h1>
                         <Summary genreData={genreData} />
                     </div>
                     <CardComponentList items={items} />
                 </div>
-            );
-        } else {
-            return (
+            ) : (
                 <div className="p-8 w-4/5 mx-auto h-[100vh] bg-neutral-950 mb-3">
                     <div className="grid grid-cols-3">
                         <Image
-                            src={images[0].icon}
+                            src={images[1].icon}
                             alt="spotify logo"
-                            width={images[0].width}
-                            height={images[0].height}
+                            width={images[1].width}
+                            height={images[1].height}
                             className="mb-5"
                         />
                         <h1 className='text-center'>{dataRange}</h1>
@@ -45,8 +45,8 @@ const Card: React.FC<ResponseData & { dataRange: string } & { genreData: Map<str
                     <CardComponentCarousel items={tracksWithHeaders} />
                     <CardComponentList items={tracksInList} />
                 </div>
-            );
-        }
+            )
+        );
     } else {
         return (
             <div className="h-[33vh]">

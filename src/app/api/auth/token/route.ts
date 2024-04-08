@@ -17,7 +17,10 @@ async function requestToken(code: string): Promise<string> {
         const response = await fetch('https://accounts.spotify.com/api/token', {
             method: "POST",
             body: body,
-            headers: { 'Content-type': 'application/x-www-form-urlencoded', 'Authorization': 'Basic ' + buffer },
+            headers: {
+                'Content-type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic ' + buffer
+            },
         });
         const data = await response.json();
         if (data.access_token) {
@@ -41,8 +44,6 @@ export async function POST(request: NextRequest): Promise<Response> {
         if (response !== 'error') {
             return new Response(JSON.stringify({ token: response }), { status: 200 });
         }
-    } else {
-        return new Response('Unauthorized', { status: 401 });
     }
-    return new Response('Unauthorized', { status: 401 });
+    return new Response(JSON.stringify({ response: 'Unauthorized' }), { status: 401 });
 }
