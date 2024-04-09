@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { cookies } from 'next/headers'
 
 //function to generate a random string with a given length
-function generateRandomString(length: number) {
+function generateRandomString(length: number): string {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (let i = 0; i < length; i++) {
@@ -21,7 +21,6 @@ export async function GET(): Promise<Response> {
     //set the state in a cookie for later verification
     cookies().set('state', state, { httpOnly: true });
     //create the URL for the request
-    // let authUrl: string = '';
     try {
         //create the URL for the request
         const queryParams = new URLSearchParams({
@@ -31,7 +30,6 @@ export async function GET(): Promise<Response> {
             state: state,
             scope: scope,
         });
-        // authUrl = `https://accounts.spotify.com/authorize?${queryParams}`;
         return NextResponse.json({ url: authUrl + queryParams, state: state }, { status: 200 });
     } catch (error) {
         console.error('Error redirecting to Spotify authorization:', error);
