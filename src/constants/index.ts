@@ -40,3 +40,8 @@ export const socials = [
     link: "https://www.linkedin.com/in/calvinjkyu/",
   },
 ]
+
+export const ERRORMESSAGES = {
+  error: 'error',
+  unauthorized: 'Unauthorized',
+}

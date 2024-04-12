@@ -1,4 +1,4 @@
-import { ResponseData } from '../interfaces/songProp';
+import { ResponseData } from '../interfaces/songInterface';
 import Image from 'next/image';
 import { useMediaQuery } from 'react-responsive';
 
@@ -7,7 +7,7 @@ const CardList: React.FC<ResponseData> = (data) => {
     return (
         <div className="xl:h-[50vh] lg:h-[60vh] overflow-hidden">
             {/* remember to have a default height/width if using media breakpoints */}
-            <div className="overflow-y-scroll lg:h-[60vh] md:h-[60vh] h-[80vh]">
+            <div className="overflow-y-scroll lg:h-[50vh] md:h-[60vh] h-[80vh]">
                 <ul className="divide-y divide-gray-200">
                     {data.items.map((item, index) => (
                         <li key={index} className="py-4">

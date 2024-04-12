@@ -2,24 +2,10 @@
 import { NextRequest } from "next/server";
 import { cookies } from 'next/headers'
 import { Buffer } from 'buffer';
+import { ERRORMESSAGES } from "@/constants";
 
-//function to handle the POST request
-export async function POST(request: NextRequest) {
-    const data = await request.json();
-    const cookieParams = cookies().get('state')?.value;
-
-    //check if the state from the request matches the state from the cookie
-    if (data.state === cookieParams) {
-        //if it does, request the token
-        const response = await requestToken(data.code);
-        return new Response(JSON.stringify({ token: response }), { status: 200 });
-    } else {
-        return new Response('Unauthorized', { status: 401 });
-    }
-}
 //function to request the token
-async function requestToken(code: string) {
-    const encoder = new TextEncoder();
+async function requestToken(code: string): Promise<string> {
     //create the body of the request
     const body = new URLSearchParams();
     body.append('grant_type', 'authorization_code');
@@ -42,6 +28,23 @@ async function requestToken(code: string) {
             return data.access_token;
         }
     } catch (error) {
-        return new Response('Unauthorized', { status: 401 });
+        return ERRORMESSAGES.error;
     }
+    return ERRORMESSAGES.error;
+}
+
+//function to handle the POST request
+export async function POST(request: NextRequest): Promise<Response> {
+    const data = await request.json();
+    const cookieParams = cookies().get('state')?.value;
+
+    //check if the state from the request matches the state from the cookie
+    if (data.state === cookieParams) {
+        //if it does, request the token
+        const response = await requestToken(data.code);
+        if (response !== ERRORMESSAGES.error) {
+            return new Response(JSON.stringify({ token: response }), { status: 200 });
+        }
+    }
+    return new Response(JSON.stringify({ response: ERRORMESSAGES.unauthorized }), { status: 401 });
 }
