@@ -1,6 +1,6 @@
 'use server';
 import { NextRequest } from "next/server";
-import { ERRORMESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const token = await request.json();
@@ -19,6 +19,6 @@ export async function POST(request: NextRequest): Promise<Response> {
         return new Response(JSON.stringify(data), { status: 200 });
     } catch (error) {
         console.log(error);
-        return new Response(ERRORMESSAGES.unauthorized, { status: 401 });
+        return new Response(ERROR_MESSAGES.unauthorized, { status: 401 });
     }
 }

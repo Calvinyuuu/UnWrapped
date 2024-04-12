@@ -2,7 +2,7 @@
 import { NextRequest } from "next/server";
 import { cookies } from 'next/headers'
 import { Buffer } from 'buffer';
-import { ERRORMESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants";
 
 //function to request the token
 async function requestToken(code: string): Promise<string> {
@@ -28,9 +28,9 @@ async function requestToken(code: string): Promise<string> {
             return data.access_token;
         }
     } catch (error) {
-        return ERRORMESSAGES.error;
+        return ERROR_MESSAGES.error;
     }
-    return ERRORMESSAGES.error;
+    return ERROR_MESSAGES.error;
 }
 
 //function to handle the POST request
@@ -42,9 +42,9 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (data.state === cookieParams) {
         //if it does, request the token
         const response = await requestToken(data.code);
-        if (response !== ERRORMESSAGES.error) {
+        if (response !== ERROR_MESSAGES.error) {
             return new Response(JSON.stringify({ token: response }), { status: 200 });
         }
     }
-    return new Response(JSON.stringify({ response: ERRORMESSAGES.unauthorized }), { status: 401 });
+    return new Response(JSON.stringify({ response: ERROR_MESSAGES.unauthorized }), { status: 401 });
 }

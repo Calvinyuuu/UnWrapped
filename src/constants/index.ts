@@ -41,7 +41,7 @@ export const socials = [
   },
 ]
 
-export const ERRORMESSAGES = {
+export const ERROR_MESSAGES = {
   error: 'error',
   unauthorized: 'Unauthorized',
 }
