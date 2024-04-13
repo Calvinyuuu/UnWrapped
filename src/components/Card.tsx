@@ -13,6 +13,7 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
   if (items && items.length > 0) {
     const tracksWithHeaders = items.slice(0, 3);
     const tracksInList = items.slice(3, 10);
+
     return isMobile ? (
       <div className="p-8 mx-auto h-[95vh] bg-neutral-950 mb-10">
         <div className="grid grid-cols-2 items-center pb-2">

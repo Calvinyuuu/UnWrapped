@@ -51,6 +51,7 @@ export async function getTotalGenres(access_token: string, time_range: string): 
         body: JSON.stringify({ access_token, time_range }),
       });
       const artistData = (await response.json()) as ArtistData;
+      console.log(artistData);
       return tallyGenres(artistData);
     } catch (error) {
       console.log(error);
