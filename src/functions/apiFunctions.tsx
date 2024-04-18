@@ -2,6 +2,24 @@ import { GenreData } from "@/interfaces/genreInterface";
 import { ResponseData } from "@/interfaces/songInterface";
 import { ArtistData } from "@/interfaces/artistInterface";
 
+export function tallyArtist(data: ResponseData): Map<string, number> {
+  let artistCounts = new Map<string, number>();
+
+  if (data.items) {
+    data.items.forEach((item) => {
+      item.artists.forEach((artist) => {
+        if (artistCounts.has(artist.name)) {
+          artistCounts.set(artist.name, artistCounts.get(artist.name)! + 1);
+        } else {
+          artistCounts.set(artist.name, 1);
+        }
+      });
+    });
+    return artistCounts;
+  }
+  return artistCounts;
+}
+
 export function tallyGenres(data: GenreData): Map<string, number> {
   let genreCounts = new Map<string, number>();
 

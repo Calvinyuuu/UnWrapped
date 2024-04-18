@@ -10,6 +10,7 @@ import { images } from "../constants";
 
 const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }) => {
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+
   if (items && items.length > 0) {
     const tracksWithHeaders = items.slice(0, 3);
     const tracksInList = items.slice(3, 10);
@@ -19,7 +20,7 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
         <div className="grid grid-cols-2 items-center pb-2">
           <Image src={images[1].icon} alt="spotify logo" width={images[1].width} height={images[1].height} />
           <h1 className="text-center">{dataRange}</h1>
-          <Summary items={tracksWithHeaders} genreData={genreData} />
+          <Summary items={items} genreData={genreData} dataRange={dataRange} />
         </div>
         <CardComponentList items={items} />
       </div>

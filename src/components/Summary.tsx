@@ -1,14 +1,15 @@
 import { Fragment, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Dialog, Transition } from "@headlessui/react";
 import { ResponseData } from "../interfaces/songInterface";
 import { ArtistData } from "../interfaces/artistInterface";
-import { getArtistInfo, getToken } from "@/functions/apiFunctions";
+import { CardData } from "../interfaces/cardInterface";
+import { getArtistInfo, getToken, tallyArtist } from "@/functions/apiFunctions";
 import Image from "next/image";
 
-const Summary: React.FC<ResponseData & { genreData: Map<string, number> }> = ({ items, genreData }) => {
+const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRange }) => {
   const [open, setOpen] = useState(false);
   const backButtonRef = useRef(null);
+  const topThreeSongs = items.slice(0, 3);
 
   const [artistData, setArtistData] = useState<ArtistData>({
     genres: [],
@@ -21,6 +22,11 @@ const Summary: React.FC<ResponseData & { genreData: Map<string, number> }> = ({ 
     uri: "",
   });
 
+  let topArtistHref = "";
+  const artistCounts = tallyArtist({ items });
+  const unsortedArtists = Array.from(artistCounts.entries());
+  const sortedArtists = new Map(Array.from(unsortedArtists).sort((a, b) => b[1] - a[1]));
+
   const unsortedArray = Array.from(genreData.entries());
   const sortedByValue = new Map(
     Array.from(unsortedArray)
@@ -28,11 +34,19 @@ const Summary: React.FC<ResponseData & { genreData: Map<string, number> }> = ({ 
       .splice(0, 3)
   );
 
+  items.map((item) => {
+    item.artists.map((artist) => {
+      if (artist.name === sortedArtists.entries().next().value[0]) {
+        topArtistHref = artist.href;
+      }
+    });
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = await getToken();
-        const response = await getArtistInfo(token, items[0].artists[0].href);
+        const response = await getArtistInfo(token, topArtistHref);
         setArtistData(response); // Update state with the fetched data
       } catch (error) {
         console.log(error);
@@ -48,17 +62,7 @@ const Summary: React.FC<ResponseData & { genreData: Map<string, number> }> = ({ 
       {open && (
         <Transition.Root show={open} as={Fragment}>
           <Dialog as="div" className="relative z-10" initialFocus={backButtonRef} onClose={setOpen}>
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 bg-grey-500 bg-opacity-85 transition-opacity backdrop-blur-sm" />
-            </Transition.Child>
+            <div className="fixed inset-0 bg-grey-500 bg-opacity-85 transition-opacity backdrop-blur-sm" />
 
             <div className="fixed inset-0 z-10 w-screen">
               <div className="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0">
@@ -74,15 +78,20 @@ const Summary: React.FC<ResponseData & { genreData: Map<string, number> }> = ({ 
                   <Dialog.Panel className="relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all w-full bg-slate-700 bg-opacity-80 backdrop-blur-xl drop-shadow">
                     <div className="px-4 pt-5 sm:p-6 sm:pb-4">
                       <div className="sm:flex sm:items-start">
-                        <Dialog.Title as="h1" className="text-base font-semibold leading-6 border-b-2 text-slate-100">
-                          Summary
+                        <Dialog.Title
+                          as="h1"
+                          className="text-base font-semibold leading-6 border-b-2 text-slate-100 text-center"
+                        >
+                          Summary ≈ {dataRange}
                         </Dialog.Title>
                         <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                           <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
                             Top Artist
                           </Dialog.Description>
                           <div className="pb-2 border-b-2">
-                            <h3 className="font-bold font-3xl mt-2 text-slate-100">{items[0].artists[0].name}</h3>
+                            <h3 className="font-bold font-3xl mt-2 text-slate-100">
+                              {sortedArtists.entries().next().value[0]}
+                            </h3>
                             <Image
                               src={artistData.images[0].url}
                               alt="top album image"
@@ -92,17 +101,32 @@ const Summary: React.FC<ResponseData & { genreData: Map<string, number> }> = ({ 
                             />
                           </div>
                           <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
+                            Top Songs
+                          </Dialog.Description>
+                          <div className="pb-2 border-b-2">
+                            <ul className="divide-y divide-gray-200">
+                              {topThreeSongs.map((item, index) => (
+                                <li key={index} className="py-4 flex">
+                                  <div className="flex w-0 flex-1 items-center">
+                                    <span className="ml-2 text-sm font-semibold text-slate-100 text-left">
+                                      {`${index + 1}. ${item.name}`}
+                                    </span>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
                             Top Genres
                           </Dialog.Description>
                           <div>
                             <ul className="divide-y divide-gray-200">
                               {Array.from(sortedByValue).map((genre, index) => (
-                                <li key={index} className="py-4 flex justify-between">
+                                <li key={index} className="py-4 flex">
                                   <div className="flex w-0 flex-1 items-center">
-                                    <span className="ml-2 text-sm font-semibold text-slate-100">{genre[0]}</span>
-                                  </div>
-                                  <div className="mr-2 flex-shrink-0">
-                                    <p className="text-sm text-center font-semibold text-slate-100">{genre[1]}</p>
+                                    <span className="ml-2 text-sm font-semibold text-slate-100">
+                                      {`${index + 1}. ${genre[0]}`}
+                                    </span>
                                   </div>
                                 </li>
                               ))}
