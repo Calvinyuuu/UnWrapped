@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { ResponseData } from "../../interfaces/songInterface";
-import { getAccessCode, getSongData, getTotalGenres, tallyGenres } from "./apiFunctions";
+import { getAccessCode, getSongData, getTotalGenres } from "../../functions/apiFunctions";
 const Card = dynamic(() => import("../../components/Card"), { ssr: true });
 
 //function to handle the POST request to trade for the access token and to display the information traded with the access token
@@ -46,7 +46,7 @@ const Page: React.FC = () => {
       setGenreDataMedium(genresMedium!);
       setGenreDataLong(genresLong!);
     };
-    //if the state is not 'error=access_denied' then getToken the state and code
+    //if the state is not 'error=access_denied' then getToken using state and code
     if (state !== "error=access_denied") {
       getData();
     } else {

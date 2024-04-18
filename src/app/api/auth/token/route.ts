@@ -1,5 +1,5 @@
 'use server';
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from 'next/headers'
 import { Buffer } from 'buffer';
 import { ERROR_MESSAGES } from "@/constants";
@@ -25,6 +25,7 @@ async function requestToken(code: string): Promise<string> {
         });
         const data = await response.json();
         if (data.access_token) {
+            cookies().set("token", data.access_token, { httpOnly: true });
             return data.access_token;
         }
     } catch (error) {
@@ -47,4 +48,13 @@ export async function POST(request: NextRequest): Promise<Response> {
         }
     }
     return new Response(JSON.stringify({ response: ERROR_MESSAGES.unauthorized }), { status: 401 });
+}
+
+export async function GET(): Promise<Response> {
+    try {
+        return NextResponse.json({ token: cookies().get("token")?.value }, { status: 200 });
+    } catch (error) {
+        console.error('Error redirecting to Spotify authorization:', error);
+        return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500 });
+    }
 }

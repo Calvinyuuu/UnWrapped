@@ -1,5 +1,24 @@
-import { ArtistData } from "@/interfaces/artistInterface";
+import { GenreData } from "@/interfaces/genreInterface";
 import { ResponseData } from "@/interfaces/songInterface";
+import { ArtistData } from "@/interfaces/artistInterface";
+
+export function tallyGenres(data: GenreData): Map<string, number> {
+  let genreCounts = new Map<string, number>();
+
+  if (data.items) {
+    data.items.forEach((item) => {
+      item.genres.forEach((genre) => {
+        if (genreCounts.has(genre)) {
+          genreCounts.set(genre, genreCounts.get(genre)! + 1);
+        } else {
+          genreCounts.set(genre, 1);
+        }
+      });
+    });
+    return genreCounts;
+  }
+  return genreCounts;
+}
 
 export async function getAccessCode(state: string, code: string): Promise<string> {
   //create the body of the request
@@ -44,15 +63,14 @@ export async function getSongData(access_token: string, time_range: string): Pro
 export async function getTotalGenres(access_token: string, time_range: string): Promise<Map<string, number>> {
   if (access_token) {
     try {
-      const response = await fetch("/api/artists", {
+      const response = await fetch("/api/data/genres", {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ access_token, time_range }),
       });
-      const artistData = (await response.json()) as ArtistData;
-      console.log(artistData);
-      return tallyGenres(artistData);
+      const genreData = (await response.json()) as GenreData;
+      return tallyGenres(genreData);
     } catch (error) {
       console.log(error);
     }
@@ -61,20 +79,36 @@ export async function getTotalGenres(access_token: string, time_range: string): 
   return new Map<string, number>();
 }
 
-export function tallyGenres(data: ArtistData): Map<string, number> {
-  let genreCounts = new Map<string, number>();
-
-  if (data.items) {
-    data.items.forEach((item) => {
-      item.genres.forEach((genre) => {
-        if (genreCounts.has(genre)) {
-          genreCounts.set(genre, genreCounts.get(genre)! + 1);
-        } else {
-          genreCounts.set(genre, 1);
-        }
+export async function getArtistInfo(access_token: string, href: string): Promise<ArtistData> {
+  if (access_token) {
+    try {
+      const response = await fetch("api/data/artist", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ access_token, href }),
       });
-    });
-    return genreCounts;
+      const artistData = (await response.json()) as ArtistData;
+      if (artistData) {
+        return artistData;
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
-  return genreCounts;
+  return {} as ArtistData;
+}
+
+export async function getToken(): Promise<string> {
+  try {
+    const response = await fetch("/api/auth/token", {
+      method: "GET",
+      mode: "no-cors",
+    });
+    const data = await response.json();
+    return data.token;
+  } catch (error) {
+    console.log(error);
+  }
+  return "";
 }

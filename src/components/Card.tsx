@@ -19,7 +19,7 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
         <div className="grid grid-cols-2 items-center pb-2">
           <Image src={images[1].icon} alt="spotify logo" width={images[1].width} height={images[1].height} />
           <h1 className="text-center">{dataRange}</h1>
-          <Summary genreData={genreData} />
+          <Summary items={tracksWithHeaders} genreData={genreData} />
         </div>
         <CardComponentList items={items} />
       </div>
