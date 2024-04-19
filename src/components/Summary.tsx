@@ -57,8 +57,13 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
   }, []);
 
   return (
-    <div>
-      <button onClick={() => setOpen(true)}>Open Summary</button>
+    <div className="flex justify-end">
+      <button
+        className="text-sm md:text-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg p-1 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+        onClick={() => setOpen(true)}
+      >
+        Open Summary
+      </button>
       {open && (
         <Transition.Root show={open} as={Fragment}>
           <Dialog as="div" className="relative z-10" initialFocus={backButtonRef} onClose={setOpen}>
@@ -122,7 +127,7 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                           <div>
                             <ul className="divide-y divide-gray-200">
                               {Array.from(sortedByValue).map((genre, index) => (
-                                <li key={index} className="py-4 flex">
+                                <li key={index} className="py-2 flex">
                                   <div className="flex w-0 flex-1 items-center">
                                     <span className="ml-2 text-sm font-semibold text-slate-100">
                                       {`${index + 1}. ${genre[0]}`}

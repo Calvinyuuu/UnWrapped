@@ -1,6 +1,6 @@
 import { ResponseData } from "../interfaces/songInterface";
 import { CardData } from "../interfaces/cardInterface";
-import CardComponentCarousel from "./CardComponentCarousel";
+import CardComponentTop from "./CardComponentTop";
 import CardComponentList from "./CardComponentList";
 import Summary from "./Summary";
 import React from "react";
@@ -19,13 +19,15 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
       <div className="p-8 mx-auto h-[95vh] bg-neutral-950 mb-10">
         <div className="grid grid-cols-2 items-center pb-2">
           <Image src={images[1].icon} alt="spotify logo" width={images[1].width} height={images[1].height} />
-          <h1 className="text-center">{dataRange}</h1>
+          <h1 className="text-right text-sm md:text-lg">{dataRange}</h1>
+          {/* empty div to hold the position */}
+          <div />
           <Summary items={items} genreData={genreData} dataRange={dataRange} />
         </div>
         <CardComponentList items={items} />
       </div>
     ) : (
-      <div className="p-8 w-4/5 mx-auto h-[100vh] bg-neutral-950 mb-3">
+      <div className="p-8 w-4/5 mx-auto h-[100vh] bg-neutral-800 mb-3">
         <div className="grid grid-cols-3">
           <Image
             src={images[1].icon}
@@ -37,7 +39,7 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
           <h1 className="text-center">{dataRange}</h1>
         </div>
         {/* these both have div's being returned. */}
-        <CardComponentCarousel items={tracksWithHeaders} />
+        <CardComponentTop items={tracksWithHeaders} />
         <CardComponentList items={tracksInList} />
       </div>
     );
