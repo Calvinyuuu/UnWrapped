@@ -27,7 +27,7 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
         <CardComponentList items={items} />
       </div>
     ) : (
-      <div className="p-8 w-4/5 mx-auto h-[100vh] bg-neutral-800 mb-3">
+      <div className="p-8 w-5/6 mx-auto h-[100vh] bg-neutral-800 mb-3">
         <div className="grid grid-cols-3">
           <Image
             src={images[1].icon}
