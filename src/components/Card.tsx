@@ -16,18 +16,18 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
     const tracksInList = items.slice(3, 10);
 
     return isMobile ? (
-      <div className="p-8 mx-auto h-[95vh] bg-neutral-950 mb-10">
+      <div className="p-8 mx-auto h-[95vh] bg-background-image bg-cover my-5">
         <div className="grid grid-cols-2 items-center pb-2">
           <Image src={images[1].icon} alt="spotify logo" width={images[1].width} height={images[1].height} />
-          <h1 className="text-right text-sm md:text-lg">{dataRange}</h1>
           {/* empty div to hold the position */}
           <div />
+          <h1 className="text-left text-sm md:text-lg">{dataRange}</h1>
           <Summary items={items} genreData={genreData} dataRange={dataRange} />
         </div>
         <CardComponentList items={items} />
       </div>
     ) : (
-      <div className="p-8 w-5/6 mx-auto h-[100vh] bg-neutral-800 mb-3">
+      <div className="p-8 w-5/6 mx-auto h-[100vh] bg-background-image bg-cover bg-center mb-3">
         <div className="grid grid-cols-3">
           <Image
             src={images[1].icon}

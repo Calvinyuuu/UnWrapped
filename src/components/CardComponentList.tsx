@@ -22,7 +22,7 @@ const CardList: React.FC<ResponseData> = (data) => {
                   className="aspect-square"
                 />
 
-                <div className="flex-grow">
+                <div className="flex-grow lg:mr-32">
                   <div className="text-center text-xs md:text-lg">{item.name}</div>
                   <div className="flex flex-wrap justify-center py-1">
                     {item.artists.map((artist, index) => (
