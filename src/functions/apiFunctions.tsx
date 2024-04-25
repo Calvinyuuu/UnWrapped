@@ -3,7 +3,7 @@ import { ResponseData } from "@/interfaces/songInterface";
 import { ArtistData } from "@/interfaces/artistInterface";
 
 export function tallyArtist(data: ResponseData): Map<string, number> {
-  let artistCounts = new Map<string, number>();
+  const artistCounts = new Map<string, number>();
 
   if (data.items) {
     data.items.forEach((item) => {
@@ -15,13 +15,12 @@ export function tallyArtist(data: ResponseData): Map<string, number> {
         }
       });
     });
-    return artistCounts;
   }
   return artistCounts;
 }
 
 export function tallyGenres(data: GenreData): Map<string, number> {
-  let genreCounts = new Map<string, number>();
+  const genreCounts = new Map<string, number>();
 
   if (data.items) {
     data.items.forEach((item) => {
@@ -33,7 +32,6 @@ export function tallyGenres(data: GenreData): Map<string, number> {
         }
       });
     });
-    return genreCounts;
   }
   return genreCounts;
 }
@@ -53,7 +51,7 @@ export async function getAccessCode(state: string, code: string): Promise<string
       return responseData.token;
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
   return "";
 }
@@ -72,7 +70,7 @@ export async function getSongData(access_token: string, time_range: string): Pro
         return responseData;
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
   return {} as ResponseData;
@@ -90,15 +88,15 @@ export async function getTotalGenres(access_token: string, time_range: string): 
       const genreData = (await response.json()) as GenreData;
       return tallyGenres(genreData);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
   //returns an empty map if the access token is not valid
   return new Map<string, number>();
 }
 
-export async function getArtistInfo(access_token: string, href: string): Promise<ArtistData> {
-  if (access_token) {
+export async function getArtistInfo(access_token: string, href: string): Promise<ArtistData | null> {
+  if (access_token && href) {
     try {
       const response = await fetch("api/data/artist", {
         method: "POST",
@@ -106,15 +104,16 @@ export async function getArtistInfo(access_token: string, href: string): Promise
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ access_token, href }),
       });
-      const artistData = (await response.json()) as ArtistData;
-      if (artistData) {
-        return artistData;
+      if (response.status === 401) {
+        throw new Error("Unauthorized");
       }
+      const artistData = (await response.json()) as ArtistData;
+      return artistData;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
-  return {} as ArtistData;
+  return null;
 }
 
 export async function getToken(): Promise<string> {
@@ -126,7 +125,7 @@ export async function getToken(): Promise<string> {
     const data = await response.json();
     return data.token;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
   return "";
 }

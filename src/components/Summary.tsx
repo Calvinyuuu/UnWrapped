@@ -7,11 +7,11 @@ import { getArtistInfo, getToken, tallyArtist } from "@/functions/apiFunctions";
 import Image from "next/image";
 
 const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRange }) => {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const backButtonRef = useRef(null);
   const topThreeSongs = items.slice(0, 3);
 
-  const [artistData, setArtistData] = useState<ArtistData>({
+  const [artistData, setArtistData] = useState<ArtistData | null>({
     genres: [],
     href: "",
     id: "",
@@ -22,25 +22,34 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
     uri: "",
   });
 
-  let topArtistHref = "";
-  const artistCounts = tallyArtist({ items });
-  const unsortedArtists = Array.from(artistCounts.entries());
-  const sortedArtists = new Map(Array.from(unsortedArtists).sort((a, b) => b[1] - a[1]));
+  const [topArtistHref, setTopArtistHref] = useState("");
+  const [sortedArtists, setSortedArtists] = useState(new Map<string, number>());
+  const [sortedByValue, setSortedByValue] = useState(new Map<string, number>());
 
-  const unsortedArray = Array.from(genreData.entries());
-  const sortedByValue = new Map(
-    Array.from(unsortedArray)
-      .sort((a, b) => b[1] - a[1])
-      .splice(0, 3)
-  );
+  useEffect(() => {
+    const artistCounts = tallyArtist({ items });
+    const unsortedArtists = Array.from(artistCounts.entries());
+    const sortedArtists = new Map(Array.from(unsortedArtists).sort((a, b) => b[1] - a[1]));
 
-  items.map((item) => {
-    item.artists.map((artist) => {
-      if (artist.name === sortedArtists.entries().next().value[0]) {
-        topArtistHref = artist.href;
-      }
+    const unsortedArray = Array.from(genreData.entries());
+    const sortedByValue = new Map(
+      Array.from(unsortedArray)
+        .sort((a, b) => b[1] - a[1])
+        .splice(0, 3)
+    );
+
+    const topArtist = items.find((item) => {
+      return item.artists.some((artist) => artist.name === sortedArtists.entries().next().value[0]);
     });
-  });
+
+    if (topArtist) {
+      setTopArtistHref(
+        topArtist.artists.find((artist) => artist.name === sortedArtists.entries().next().value[0])?.href || ""
+      );
+    }
+    setSortedArtists(sortedArtists);
+    setSortedByValue(sortedByValue);
+  }, [items, genreData]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,19 +63,19 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
     };
 
     fetchData(); // Call fetchData function when component mounts
-  }, []);
+  }, [topArtistHref]); // Add topArtistHref as a dependency
 
   return (
     <div className="flex justify-end">
       <button
         className="text-sm md:text-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg p-1 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-        onClick={() => setOpen(true)}
+        onClick={() => setIsOpen(true)}
       >
         Open Summary
       </button>
-      {open && (
-        <Transition.Root show={open} as={Fragment}>
-          <Dialog as="div" className="relative z-10" initialFocus={backButtonRef} onClose={setOpen}>
+      {isOpen && (
+        <Transition.Root show={isOpen} as={Fragment}>
+          <Dialog as="div" className="relative z-10" initialFocus={backButtonRef} onClose={setIsOpen}>
             <div className="fixed inset-0 bg-grey-500 bg-opacity-85 transition-opacity backdrop-blur-sm" />
 
             <div className="fixed inset-0 z-10 w-screen">
@@ -97,13 +106,18 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                             <h3 className="font-bold font-3xl mt-2 text-slate-100">
                               {sortedArtists.entries().next().value[0]}
                             </h3>
-                            <Image
-                              src={artistData.images[0].url}
-                              alt="top album image"
-                              width={200}
-                              height={200}
-                              className="mx-auto"
-                            />
+
+                            {artistData?.images && artistData.images.length > 0 ? (
+                              <Image
+                                src={artistData.images[0].url}
+                                alt="top album image"
+                                width={200}
+                                height={200}
+                                className="mx-auto"
+                              />
+                            ) : (
+                              <div>Loading...</div>
+                            )}
                           </div>
                           <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
                             Top Songs
@@ -144,7 +158,7 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                       <button
                         type="button"
                         className="mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                        onClick={() => setOpen(false)}
+                        onClick={() => setIsOpen(false)}
                         ref={backButtonRef}
                       >
                         Back
