@@ -56,7 +56,7 @@ export async function getAccessCode(state: string, code: string): Promise<string
   return "";
 }
 
-export async function getSongData(access_token: string, time_range: string): Promise<ResponseData> {
+export async function getSongData(access_token: string, time_range: string): Promise<ResponseData | null> {
   if (access_token) {
     try {
       const response = await fetch("/api/data", {
@@ -73,7 +73,7 @@ export async function getSongData(access_token: string, time_range: string): Pro
       console.error(error);
     }
   }
-  return {} as ResponseData;
+  return null;
 }
 
 export async function getTotalGenres(access_token: string, time_range: string): Promise<Map<string, number>> {

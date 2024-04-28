@@ -28,27 +28,25 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
 
   useEffect(() => {
     const artistCounts = tallyArtist({ items });
-    const unsortedArtists = Array.from(artistCounts.entries());
-    const sortedArtists = new Map(Array.from(unsortedArtists).sort((a, b) => b[1] - a[1]));
-
-    const unsortedArray = Array.from(genreData.entries());
-    const sortedByValue = new Map(
-      Array.from(unsortedArray)
-        .sort((a, b) => b[1] - a[1])
-        .splice(0, 3)
-    );
-
-    const topArtist = items.find((item) => {
-      return item.artists.some((artist) => artist.name === sortedArtists.entries().next().value[0]);
-    });
-
-    if (topArtist) {
-      setTopArtistHref(
-        topArtist.artists.find((artist) => artist.name === sortedArtists.entries().next().value[0])?.href || ""
-      );
+    if (artistCounts.entries().next().value) {
+      const unsortedArtists = Array.from(artistCounts.entries());
+      const sortedArtists = new Map(unsortedArtists.sort((a, b) => b[1] - a[1]));
+      setSortedArtists(sortedArtists);
+      // Find the first artist that matches in the top 3 songs so we can get the href of the most listened to artist instead of the very first artist we find
+      const topArtist = items.find((item) => {
+        return item.artists.some((artist) => artist.name === sortedArtists.entries().next().value[0]);
+      });
+      if (topArtist) {
+        setTopArtistHref(
+          topArtist.artists.find((artist) => artist.name === sortedArtists.entries().next().value[0])?.href || ""
+        );
+      }
     }
-    setSortedArtists(sortedArtists);
-    setSortedByValue(sortedByValue);
+    if (genreData) {
+      const unsortedArray = Array.from(genreData.entries());
+      const sortedByValue = new Map(unsortedArray.sort((a, b) => b[1] - a[1]).splice(0, 3));
+      setSortedByValue(sortedByValue);
+    }
   }, [items, genreData]);
 
   useEffect(() => {
