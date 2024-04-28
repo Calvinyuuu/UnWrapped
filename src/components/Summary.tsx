@@ -58,7 +58,7 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
         const response = await getArtistInfo(token, topArtistHref);
         setArtistData(response); // Update state with the fetched data
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
 
