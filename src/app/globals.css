@@ -31,3 +31,38 @@ body {
     text-wrap: balance;
   }
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  -ms-overflow-style: none;
+}
+
+/* Handle */
+*::-moz-scrollbar-thumb {
+  background: #888888;
+}
+
+/* Handle on hover */
+*::-moz-scrollbar-thumb:hover {
+  background: #555;
+}
