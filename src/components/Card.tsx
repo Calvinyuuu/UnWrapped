@@ -43,7 +43,7 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
             height={images[1].height}
             className="mb-5"
           />
-          <h1 className="text-center">{dataRange}</h1>
+          <h1 className="text-center">{`Top Songs ${dataRange}`}</h1>
         </div>
         {/* these both have div's being returned. */}
         <CardComponentTop items={tracksWithHeaders} />

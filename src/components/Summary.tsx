@@ -105,7 +105,7 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                         </Dialog.Title>
                         <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                           <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
-                            Top Artist
+                            Overall Top Artist
                           </Dialog.Description>
                           <div className="pb-2 border-b-2">
                             <h3 className="font-bold font-3xl mt-2 text-slate-100">
@@ -125,7 +125,7 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                             )}
                           </div>
                           <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
-                            Top Songs
+                            Overall Top Songs
                           </Dialog.Description>
                           <div className="pb-2 border-b-2">
                             <ul className="divide-y divide-gray-200">
@@ -141,7 +141,7 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                             </ul>
                           </div>
                           <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
-                            Top Genres
+                            Overall Top Genres
                           </Dialog.Description>
                           <div>
                             <ul className="divide-y divide-gray-200">
