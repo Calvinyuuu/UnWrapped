@@ -18,7 +18,6 @@ export async function POST(request: NextRequest) {
         const data = await response.json();
         return new Response(JSON.stringify(data), { status: 200 });
     } catch (error) {
-        console.log(error);
-        return new Response(ERROR_MESSAGES.unauthorized, { status: 401 });
+        return new Response(JSON.stringify({ response: ERROR_MESSAGES.unauthorized }), { status: 401 });
     }
 }

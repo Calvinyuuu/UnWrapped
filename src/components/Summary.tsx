@@ -85,92 +85,97 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
 
             <div className="fixed inset-0 z-10 w-screen">
               <div className="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0">
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                  enterTo="opacity-100 translate-y-0 sm:scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all w-full bg-slate-700 bg-opacity-80 backdrop-blur-xl drop-shadow">
-                    <div className="px-4 pt-5 sm:p-6 sm:pb-4">
-                      <div className="sm:flex sm:items-start">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all w-full bg-slate-700 bg-opacity-80 backdrop-blur-xl drop-shadow">
+                  <div className="px-4 pt-5 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                      <div className="grid grid-cols-4 border-b-2">
                         <Dialog.Title
                           as="h1"
-                          className="text-base font-semibold leading-6 border-b-2 text-slate-100 text-center"
+                          className="text-base font-semibold leading-6 text-slate-100 text-right row-span-3 col-span-3"
                         >
                           Summary ≈ {dataRange}
                         </Dialog.Title>
-                        <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                          <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
-                            Overall Top Artist
-                          </Dialog.Description>
-                          <div className="pb-2 border-b-2">
-                            <h3 className="font-bold font-3xl mt-2 text-slate-100">
-                              {sortedArtists.entries().next().value[0]}
-                            </h3>
+                        <div />
+                        <button
+                          type="button"
+                          className="ml-auto rounded-md inline-flex items-center justify-center text-gray-400"
+                          onClick={() => setIsOpen(false)}
+                          ref={backButtonRef}
+                        >
+                          <svg
+                            className="h-6 w-6"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                        <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
+                          Overall Top Artist
+                        </Dialog.Description>
+                        <div className="pb-2 border-b-2">
+                          <h3 className="font-bold font-3xl mt-2 text-slate-100">
+                            {sortedArtists.entries().next().value[0]}
+                          </h3>
 
-                            {artistData?.images && artistData.images.length > 0 ? (
-                              <Image
-                                src={artistData.images[0].url}
-                                alt="top album image"
-                                width={200}
-                                height={200}
-                                className="mx-auto"
-                              />
-                            ) : (
-                              <div>Loading...</div>
-                            )}
-                          </div>
-                          <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
-                            Overall Top Songs
-                          </Dialog.Description>
-                          <div className="pb-2 border-b-2">
-                            <ul className="divide-y divide-gray-200">
-                              {topThreeSongs.map((item, index) => (
-                                <li key={index} className="py-4 flex">
-                                  <div className="flex w-0 flex-1 items-center">
-                                    <span className="ml-2 text-sm font-semibold text-slate-100 text-left">
-                                      {`${index + 1}. ${item.name}`}
-                                    </span>
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                          <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
-                            Overall Top Genres
-                          </Dialog.Description>
-                          <div>
-                            <ul className="divide-y divide-gray-200">
-                              {Array.from(sortedByValue).map((genre, index) => (
-                                <li key={index} className="py-2 flex">
-                                  <div className="flex w-0 flex-1 items-center">
-                                    <span className="ml-2 text-sm font-semibold text-slate-100">
-                                      {`${index + 1}. ${genre[0]}`}
-                                    </span>
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
+                          {artistData?.images && artistData.images.length > 0 ? (
+                            <Image
+                              src={artistData.images[0].url}
+                              alt="top album image"
+                              width={200}
+                              height={200}
+                              className="mx-auto"
+                            />
+                          ) : (
+                            <div>Loading...</div>
+                          )}
+                        </div>
+                        <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
+                          Overall Top Songs
+                        </Dialog.Description>
+                        <div className="pb-1 border-b-2">
+                          <ul className="divide-y divide-gray-200">
+                            {topThreeSongs.map((item, index) => (
+                              <li key={index} className="py-2 flex">
+                                <div className="flex w-0 flex-1 items-center">
+                                  <span className="ml-2 text-sm font-semibold text-slate-100 text-left">
+                                    {`${index + 1}. ${item.name}`}
+                                  </span>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
+                          Overall Top Genres
+                        </Dialog.Description>
+                        <div className="pb-1">
+                          <ul className="divide-y divide-gray-200">
+                            {Array.from(sortedByValue).map((genre, index) => (
+                              <li key={index} className="py-2 flex">
+                                <div className="flex w-0 flex-1 items-center">
+                                  <span className="ml-2 text-sm font-semibold text-slate-100">
+                                    {`${index + 1}. ${genre[0]}`}
+                                  </span>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
                     </div>
-                    <div className=" px-4 pb-3 sm:flex sm:px-6">
-                      <button
-                        type="button"
-                        className="mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                        onClick={() => setIsOpen(false)}
-                        ref={backButtonRef}
-                      >
-                        Back
-                      </button>
-                    </div>
-                  </Dialog.Panel>
-                </Transition.Child>
+                  </div>
+                </Dialog.Panel>
               </div>
             </div>
           </Dialog>
