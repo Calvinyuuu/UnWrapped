@@ -57,7 +57,7 @@ const Page: React.FC = () => {
     <>
       <Card {...songDataShort} dataRange="Last Month" genreData={genreDataShort} />
       <Card {...songDataMedium} dataRange="Last Six Months" genreData={genreDataMedium} />
-      <Card {...songDataLong} dataRange="Last Couple Years" genreData={genreDataLong} />
+      <Card {...songDataLong} dataRange="Last Few Years" genreData={genreDataLong} />
     </>
   );
 };

@@ -5,7 +5,7 @@ const CardComponentTop: React.FC<ResponseData> = (data) => {
   return (
     <div className="flex items-center mb-5 ">
       {data.items.map((item) => (
-        <div key={item.id} className="flex justify-center py-2 w-full h-[30vh] lg:h-[36vh] lg:py-4">
+        <div key={item.id} className="flex justify-center py-2 w-full h-[30vh] lg:h-[36vh] lg:py-2">
           <div className="bg-white bg-opacity-10 backdrop backdrop-blur-sm rounded-xl p-3 text-white w-11/12 shadow-lg">
             <div className="aspect-w-1 aspect-h-1 flex flex-col items-center justify-center">
               <Image
