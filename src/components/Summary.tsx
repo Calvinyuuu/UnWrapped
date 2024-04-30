@@ -65,12 +65,19 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
 
   return (
     <div className="flex justify-end">
-      <button
-        className="text-sm md:text-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg p-1 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-        onClick={() => setIsOpen(true)}
-      >
-        Open Summary
-      </button>
+      <span className="relative inline-flex">
+        <button
+          type="button"
+          className="inline-flex items-center px-2.5 py-1.5 font-semibold leading-6 text-sm shadow rounded-md text-spotify-green bg-neutral-800"
+          onClick={() => setIsOpen(true)}
+        >
+          Summary
+        </button>
+        <span className="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-spotify-green opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-spotify-green"></span>
+        </span>
+      </span>
       {isOpen && (
         <Transition.Root show={isOpen} as={Fragment}>
           <Dialog as="div" className="relative z-10" initialFocus={backButtonRef} onClose={setIsOpen}>
