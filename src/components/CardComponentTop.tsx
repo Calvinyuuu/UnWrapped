@@ -17,12 +17,12 @@ const CardComponentTop: React.FC<ResponseData> = (data) => {
               />
               <span className="text-center text-sm pt-2 xl:max-w-sm md:max-w-40">
                 <p className="overflow-hidden whitespace-nowrap text-ellipsis text-nowrap xl:text-wrap">{item.name}</p>
-                {item.artists.map((artist) => (
+                {item.artists.map((artist, index) => (
                   <p
                     key={artist.id}
                     className="mx-2 text-orange-400 overflow-hidden whitespace-nowrap text-ellipsis md:text-wrap"
                   >
-                    {artist.name}
+                    {index === item.artists.length - 1 ? artist.name : `${artist.name}, `}
                   </p>
                 ))}
                 <p className="overflow-hidden whitespace-nowrap text-ellipsis text-nowrap xl:text-wrap">

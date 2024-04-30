@@ -27,7 +27,7 @@ const CardList: React.FC<ResponseData> = (data) => {
                   <div className="flex flex-wrap justify-center py-1">
                     {item.artists.map((artist, index) => (
                       <div key={artist.id} className="mx-2 text-orange-400 text-xs md:text-lg">
-                        {artist.name}
+                        {index === item.artists.length - 1 ? artist.name : `${artist.name}, `}
                       </div>
                     ))}
                   </div>
