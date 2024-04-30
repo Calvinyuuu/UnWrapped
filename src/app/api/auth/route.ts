@@ -14,7 +14,6 @@ function generateRandomString(length: number): string {
 
 //function to handle the GET request to get the code from spotify
 export async function GET(): Promise<Response> {
-    console.log(process.env.REDIRECT_URI!)
     //set the scope and state for the request
     const scope = 'streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state user-library-read user-read-recently-played user-top-read';
     const state = generateRandomString(16);
