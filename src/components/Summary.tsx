@@ -9,7 +9,7 @@ import Image from "next/image";
 const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const backButtonRef = useRef(null);
-  const topThreeSongs = items.slice(0, 3);
+  const itemNames = items.map((item) => item.name).join(" · ");
 
   const [artistData, setArtistData] = useState<ArtistData | null>({
     genres: [],
@@ -71,7 +71,7 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
           className="inline-flex items-center px-2.5 py-1.5 font-semibold leading-6 text-sm shadow rounded-md text-spotify-green bg-neutral-800"
           onClick={() => setIsOpen(true)}
         >
-          Summary
+          Share
         </button>
         <span className="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-spotify-green opacity-75"></span>
@@ -85,20 +85,19 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
 
             <div className="fixed inset-0 z-10 w-screen">
               <div className="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0">
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all w-full bg-slate-700 bg-opacity-80 backdrop-blur-xl drop-shadow">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg text-left shadow-xl w-full bg-gradient-to-br from-[#613DC1]/70 to-[#B0A3D4]/30 backdrop-blur-xl drop-shadow">
                   <div className="px-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
-                      <div className="grid grid-cols-4 border-b-2">
+                      <div className="grid grid-cols-3 border-b-2 pb-1">
                         <Dialog.Title
                           as="h1"
-                          className="text-base font-semibold leading-6 text-slate-100 text-right row-span-3 col-span-3"
+                          className="text-xl font-semibold leading-6 text-slate-100 text-center col-start-2 content-center"
                         >
-                          Summary ≈ {dataRange}
+                          {dataRange}
                         </Dialog.Title>
-                        <div />
                         <button
                           type="button"
-                          className="ml-auto rounded-md inline-flex items-center justify-center text-gray-400"
+                          className="ml-auto rounded-md inline-flex items-center justify-center text-gray-400 col-start-3 mb-3"
                           onClick={() => setIsOpen(false)}
                           ref={backButtonRef}
                         >
@@ -120,11 +119,11 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                         </button>
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                        <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
+                        <Dialog.Description as="div" className="mt-2 text-md font-bold text-slate-100">
                           Overall Top Artist
                         </Dialog.Description>
                         <div className="pb-2 border-b-2">
-                          <h3 className="font-bold font-3xl mt-2 text-slate-100">
+                          <h3 className="font-xl font-semibold mt-2 text-slate-100">
                             {sortedArtists.entries().next().value[0]}
                           </h3>
 
@@ -132,45 +131,29 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                             <Image
                               src={artistData.images[0].url}
                               alt="top album image"
-                              width={200}
-                              height={200}
+                              width={150}
+                              height={150}
                               className="mx-auto"
                             />
                           ) : (
                             <div>Loading...</div>
                           )}
                         </div>
-                        <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
+                        <Dialog.Description as="div" className="mt-2 text-md font-semibold text-slate-100">
                           Overall Top Songs
                         </Dialog.Description>
-                        <div className="pb-1 border-b-2">
-                          <ul className="divide-y divide-gray-200">
-                            {topThreeSongs.map((item, index) => (
-                              <li key={index} className="py-2 flex">
-                                <div className="flex w-0 flex-1 items-center">
-                                  <span className="ml-2 text-sm font-semibold text-slate-100 text-left">
-                                    {`${index + 1}. ${item.name}`}
-                                  </span>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
+                        <div className="border-b-2 pb-1">
+                          <span className="text-sm inline-block text-white opacity-70">{itemNames}</span>
                         </div>
-                        <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
+                        <Dialog.Description as="div" className="mt-2 text-md font-semibold text-slate-100">
                           Overall Top Genres
                         </Dialog.Description>
                         <div className="pb-1">
-                          <ul className="divide-y divide-gray-200">
-                            {Array.from(sortedByValue).map((genre, index) => (
-                              <li key={index} className="py-2 flex">
-                                <div className="flex w-0 flex-1 items-center">
-                                  <span className="ml-2 text-sm font-semibold text-slate-100">
-                                    {`${index + 1}. ${genre[0]}`}
-                                  </span>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
+                          {Array.from(sortedByValue).map((genre, index) => (
+                            <span className="ml-2 text-sm inline-block text-white opacity-70">{`${index + 1}. ${
+                              genre[0]
+                            }`}</span>
+                          ))}
                         </div>
                       </div>
                     </div>
