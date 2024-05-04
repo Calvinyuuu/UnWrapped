@@ -110,10 +110,6 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                   className={`relative transform overflow-hidden rounded-lg text-left shadow-xl w-full backdrop-blur-xl drop-shadow 
                 ${colorCombinations}`}
                 >
-                  {/* <Dialog.Panel
-                  className="relative transform overflow-hidden rounded-lg text-left shadow-xl w-full backdrop-blur-xl drop-shadow 
-                bg-gradient-to-b from-[#001F54]/70 via-[#D14081]/55 to-[#001F54]/70"
-                > */}
                   <div className="px-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="grid grid-cols-5 border-b-2 pb-1">

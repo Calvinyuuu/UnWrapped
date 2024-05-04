@@ -1,10 +1,11 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import { ResponseData } from "../../interfaces/songInterface";
 import { getAccessCode, getSongData, getTotalGenres } from "../../functions/apiFunctions";
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import Indicator from "../../components/Indicator";
 const Card = dynamic(() => import("../../components/Card"), { ssr: true });
 
 //function to handle the POST request to trade for the access token and to display the information traded with the access token
@@ -28,6 +29,18 @@ const Page: React.FC = () => {
   const [genreDataShort, setGenreDataShort] = useState<Map<string, number>>(new Map<string, number>());
   const [genreDataMedium, setGenreDataMedium] = useState<Map<string, number>>(new Map<string, number>());
   const [genreDataLong, setGenreDataLong] = useState<Map<string, number>>(new Map<string, number>());
+
+  const [showIndicator, setShowIndicator] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowIndicator(false);
+    }, 10000); // unmount after 10000 milliseconds (10 seconds)
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     const getData = async () => {
@@ -57,6 +70,7 @@ const Page: React.FC = () => {
       <Card {...songDataShort} dataRange="Last Month" genreData={genreDataShort} />
       <Card {...songDataMedium} dataRange="Last Six Months" genreData={genreDataMedium} />
       <Card {...songDataLong} dataRange="Last Few Years" genreData={genreDataLong} />
+      {showIndicator && <Indicator />}
     </>
   );
 };
