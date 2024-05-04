@@ -8,12 +8,12 @@ import Image from "next/image";
 
 function chooseColor(selectColor: number): string {
   const colors = [
-    "from-[#2c0735]/60 via-[#613dc1]/50 to-[#d7dffc]/60",
-    "from-[#ffcbf2]/50 via-[#deaaff]/60 to-[#c0fdff]/50",
-    "from-[#571098]/60 via-[#973aa8]/50 to-[#ea698b]/30",
-    "from-[#1d3557]/60 via-[#457b9d]/55 to-[#a8dadc]/50",
-    "from-[#cfc7fa]/60 via-[#e2c6ee]/40 to-[#efc8dd]/30",
-    "from-[#001F54]/80 via-[#D14081]/55 to-[#FCFCFC]/50",
+    "bg-gradient-to-br from-[#2c0735]/60 via-[#613dc1]/70 to-[#d7dffc]/50",
+    "bg-gradient-to-br from-[#ffcbf2]/75 via-[#deaaff]/65 to-[#a2d2ff]/65",
+    "bg-gradient-to-br from-[#571098]/50 via-[#973aa8]/60 to-[#ea698b]/50",
+    "bg-gradient-to-br from-[#a8dadc]/50 via-[#457b9d]/70 to-[#1B3354]/60",
+    "bg-gradient-to-b from-[#001F54]/70 via-[#D14081]/55 to-[#001F54]/70",
+    "bg-gradient-to-br from-[#FFD9DA]/65 via-[#ea638c]/65 to-[#89023e]/65",
   ];
   return colors[selectColor % colors.length];
 }
@@ -106,17 +106,14 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
 
             <div className="fixed inset-0 z-10 w-screen">
               <div className="flex min-h-full items-start justify-center p-4 text-center">
-                <p>{colorNumber}</p>
                 <Dialog.Panel
                   className={`relative transform overflow-hidden rounded-lg text-left shadow-xl w-full backdrop-blur-xl drop-shadow 
-                bg-gradient-to-br ${colorCombinations}`}
+                ${colorCombinations}`}
                 >
-                  {/* from-[#2c0735]/60 via-[#613dc1]/50 to-[#d7dffc]/60 */}
-                  {/* from-[#ffcbf2]/50 via-[#deaaff]/60 to-[#c0fdff]/50 */}
-                  {/* from-[#571098]/60 via-[#973aa8]/50 to-[#ea698b]/30 */}
-                  {/* from-[#1d3557]/60 via-[#457b9d]/55 to-[#a8dadc]/50 */}
-                  {/* from-[#cfc7fa]/60 via-[#e2c6ee]/40 to-[#efc8dd]/30 */}
-                  {/* from-[#001F54]/80 via-[#D14081]/55 to-[#FCFCFC]/50 */}
+                  {/* <Dialog.Panel
+                  className="relative transform overflow-hidden rounded-lg text-left shadow-xl w-full backdrop-blur-xl drop-shadow 
+                bg-gradient-to-b from-[#001F54]/70 via-[#D14081]/55 to-[#001F54]/70"
+                > */}
                   <div className="px-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="grid grid-cols-5 border-b-2 pb-1">
@@ -179,7 +176,7 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                         <Dialog.Description as="div" className="mt-2 text-md font-semibold text-slate-100">
                           Overall Top Genres
                         </Dialog.Description>
-                        <div className="pb-1">
+                        <div className="pb-2.5">
                           {Array.from(sortedByValue).map((genre, index) => (
                             <span key={genre[0]} className="ml-2 text-sm inline-block text-white opacity-70">{`${
                               index + 1
