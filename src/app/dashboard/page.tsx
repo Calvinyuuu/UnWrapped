@@ -30,7 +30,6 @@ const Page: React.FC = () => {
   const [genreDataLong, setGenreDataLong] = useState<Map<string, number>>(new Map<string, number>());
 
   useEffect(() => {
-    // window.history.pushState({}, "", "/dashboard");
     const getData = async () => {
       let access_token = await getAccessCode(state, code);
       const songsShort = await getSongData(access_token, "short_term");
@@ -47,7 +46,7 @@ const Page: React.FC = () => {
       setGenreDataLong(genresLong!);
     };
     //if the state is not 'error=access_denied' then getToken using state and code
-    if (state !== "error=access_denied") {
+    if (state !== "error=access_denied" && state && code) {
       getData();
     } else {
       router.push("/");
