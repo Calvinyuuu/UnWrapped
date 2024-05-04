@@ -4,17 +4,10 @@ import { ResponseData } from "../interfaces/songInterface";
 import { ArtistData } from "../interfaces/artistInterface";
 import { CardData } from "../interfaces/cardInterface";
 import { getArtistInfo, getToken, tallyArtist } from "@/functions/apiFunctions";
-import * as crypto from "crypto";
 import Image from "next/image";
 
-function getRandomNumber(): number {
-  const range = 6;
-  const randomBuffer = crypto.randomBytes(4);
-  const randomNumber = randomBuffer.readUInt32LE(0);
-  return randomNumber % range;
-}
-function chooseColour(): string {
-  const colours = [
+function chooseColor(selectColor: number): string {
+  const colors = [
     "from-[#2c0735]/60 via-[#613dc1]/50 to-[#d7dffc]/60",
     "from-[#ffcbf2]/50 via-[#deaaff]/60 to-[#c0fdff]/50",
     "from-[#571098]/60 via-[#973aa8]/50 to-[#ea698b]/30",
@@ -22,7 +15,7 @@ function chooseColour(): string {
     "from-[#cfc7fa]/60 via-[#e2c6ee]/40 to-[#efc8dd]/30",
     "from-[#001F54]/80 via-[#D14081]/55 to-[#FCFCFC]/50",
   ];
-  return colours[getRandomNumber()];
+  return colors[selectColor % colors.length];
 }
 
 const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRange }) => {
@@ -44,11 +37,12 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
   const [topArtistHref, setTopArtistHref] = useState("");
   const [sortedArtists, setSortedArtists] = useState(new Map<string, number>());
   const [sortedByValue, setSortedByValue] = useState(new Map<string, number>());
+  const [colorNumber, setColorNumber] = useState(0);
   const [colorCombinations, setColorCombinations] = useState("");
 
   useEffect(() => {
-    setColorCombinations(chooseColour());
-  }, [colorCombinations]);
+    setColorCombinations(chooseColor(colorNumber));
+  }, [colorNumber]);
 
   useEffect(() => {
     const artistCounts = tallyArtist({ items });
@@ -93,7 +87,10 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
         <button
           type="button"
           className="inline-flex items-center px-2.5 py-1.5 font-semibold leading-6 text-sm shadow rounded-md text-spotify-green bg-neutral-800"
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            setIsOpen(true);
+            setColorNumber(colorNumber + 1);
+          }}
         >
           Share
         </button>
@@ -109,6 +106,7 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
 
             <div className="fixed inset-0 z-10 w-screen">
               <div className="flex min-h-full items-start justify-center p-4 text-center">
+                <p>{colorNumber}</p>
                 <Dialog.Panel
                   className={`relative transform overflow-hidden rounded-lg text-left shadow-xl w-full backdrop-blur-xl drop-shadow 
                 bg-gradient-to-br ${colorCombinations}`}
