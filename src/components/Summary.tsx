@@ -112,12 +112,12 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                 >
                   <div className="px-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
-                      <div className="grid grid-cols-5 border-b-2 pb-1">
+                      <div className="grid grid-cols-11 border-b-2 pb-1">
                         <Dialog.Title
                           as="h1"
-                          className="text-xl font-semibold leading-6 text-slate-100 text-center col-start-2 col-span-3 content-center"
+                          className="text-xl font-semibold leading-6 text-slate-100 text-center col-start-2 col-span-9 content-center"
                         >
-                          {dataRange}
+                          {`UnWrapped ${dataRange}`}
                         </Dialog.Title>
                         <button
                           type="button"

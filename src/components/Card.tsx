@@ -17,7 +17,7 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
 
     return isMobile ? (
       <div className="p-8 mx-auto h-[95vh] bg-background-image bg-cover my-5">
-        <div className="grid grid-cols-3 items-center pb-2">
+        <div className="grid grid-cols-4 items-center pb-2">
           <Image
             src={images[1].icon}
             alt="spotify logo"
@@ -25,11 +25,10 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
             height={images[1].height}
             className="row-span-2"
           />
-          <h1 className="text-center text-sm md:text-lg">Top Songs</h1>
+          <h1 className="text-center text-balance text-sm md:text-lg col-span-2 row-span-2">{`UnWrapped ${dataRange}`}</h1>
           <div className="row-span-2">
             <Summary items={items} genreData={genreData} dataRange={dataRange} />
           </div>
-          <h1 className="text-center text-sm md:text-lg">{dataRange}</h1>
         </div>
         <CardComponentList items={items} />
       </div>
@@ -43,7 +42,7 @@ const Card: React.FC<ResponseData & CardData> = ({ items, dataRange, genreData }
             height={images[1].height}
             className="mb-5"
           />
-          <h1 className="text-center">{`Top Songs ${dataRange}`}</h1>
+          <h1 className="text-center">{`UnWrapped ${dataRange}`}</h1>
         </div>
         {/* these both have div's being returned. */}
         <CardComponentTop items={tracksWithHeaders} />
