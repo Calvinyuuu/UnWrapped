@@ -36,7 +36,7 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
 
   const [topArtistHref, setTopArtistHref] = useState("");
   const [sortedArtists, setSortedArtists] = useState(new Map<string, number>());
-  const [sortedByValue, setSortedByValue] = useState(new Map<string, number>());
+  const [sortedByValue, setSortedByValue] = useState<{ genre: string; key: string }[]>([]);
   const [colorNumber, setColorNumber] = useState(0);
   const [colorCombinations, setColorCombinations] = useState("");
 
@@ -62,8 +62,14 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
     }
     if (genreData) {
       const unsortedArray = Array.from(genreData.entries());
-      const sortedByValue = new Map(unsortedArray.sort((a, b) => b[1] - a[1]).splice(0, 3));
-      setSortedByValue(sortedByValue);
+      const sortedByValue = unsortedArray.sort((a, b) => b[1] - a[1]).splice(0, 3);
+      const displayGenres = sortedByValue.map((genre, index) => {
+        return {
+          genre: `${index + 1}. ${genre[0]}, `,
+          key: genre[0],
+        };
+      });
+      setSortedByValue(displayGenres);
     }
   }, [items, genreData]);
 
@@ -173,10 +179,10 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                           Overall Top Genres
                         </Dialog.Description>
                         <div className="pb-2.5">
-                          {Array.from(sortedByValue).map((genre, index) => (
-                            <span key={genre[0]} className="ml-2 text-sm inline-block text-white opacity-70">{`${
-                              index + 1
-                            }. ${genre[0]}`}</span>
+                          {sortedByValue.map((genreObject) => (
+                            <span key={genreObject.key} className="ml-2 text-sm inline-block text-white opacity-70">
+                              {genreObject.genre}
+                            </span>
                           ))}
                         </div>
                       </div>
