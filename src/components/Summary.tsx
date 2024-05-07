@@ -64,12 +64,20 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
     if (genreData) {
       const unsortedArray = Array.from(genreData.entries());
       const sortedByValue = unsortedArray.sort((a, b) => b[1] - a[1]).splice(0, 3);
-      const displayGenres = sortedByValue.map((genre, index) => {
-        return {
-          genre: `${index + 1}. ${genre[0]}, `,
-          key: genre[0],
-        };
+      const displayGenres: { genre: string; key: string }[] = sortedByValue.map((genre, index, array) => {
+        if (index === array.length - 1) {
+          return {
+            genre: `${index + 1}. ${genre[0]}`,
+            key: genre[0],
+          };
+        } else {
+          return {
+            genre: `${index + 1}. ${genre[0]}, `,
+            key: genre[0],
+          };
+        }
       });
+
       setSortedByValue(displayGenres);
     }
   }, [items, genreData]);
