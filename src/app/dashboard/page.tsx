@@ -1,10 +1,11 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import { ResponseData } from "../../interfaces/songInterface";
 import { getAccessCode, getSongData, getTotalGenres } from "../../functions/apiFunctions";
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import Indicator from "../../components/Indicator";
 const Card = dynamic(() => import("../../components/Card"), { ssr: true });
 
 //function to handle the POST request to trade for the access token and to display the information traded with the access token
@@ -29,8 +30,19 @@ const Page: React.FC = () => {
   const [genreDataMedium, setGenreDataMedium] = useState<Map<string, number>>(new Map<string, number>());
   const [genreDataLong, setGenreDataLong] = useState<Map<string, number>>(new Map<string, number>());
 
+  const [showIndicator, setShowIndicator] = useState(true);
+
   useEffect(() => {
-    // window.history.pushState({}, "", "/dashboard");
+    const timer = setTimeout(() => {
+      setShowIndicator(false);
+    }, 10000); // unmount after 10000 milliseconds (10 seconds)
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
     const getData = async () => {
       let access_token = await getAccessCode(state, code);
       const songsShort = await getSongData(access_token, "short_term");
@@ -47,7 +59,7 @@ const Page: React.FC = () => {
       setGenreDataLong(genresLong!);
     };
     //if the state is not 'error=access_denied' then getToken using state and code
-    if (state !== "error=access_denied") {
+    if (state !== "error=access_denied" && state && code) {
       getData();
     } else {
       router.push("/");
@@ -58,6 +70,7 @@ const Page: React.FC = () => {
       <Card {...songDataShort} dataRange="Last Month" genreData={genreDataShort} />
       <Card {...songDataMedium} dataRange="Last Six Months" genreData={genreDataMedium} />
       <Card {...songDataLong} dataRange="Last Few Years" genreData={genreDataLong} />
+      {showIndicator && <Indicator />}
     </>
   );
 };

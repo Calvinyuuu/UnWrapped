@@ -6,10 +6,22 @@ import { CardData } from "../interfaces/cardInterface";
 import { getArtistInfo, getToken, tallyArtist } from "@/functions/apiFunctions";
 import Image from "next/image";
 
+function chooseColor(selectColor: number): string {
+  const colors = [
+    "bg-gradient-to-br from-[#2c0735]/60 via-[#613dc1]/70 to-[#d7dffc]/50",
+    "bg-gradient-to-br from-[#ffcbf2]/75 via-[#deaaff]/65 to-[#a2d2ff]/65",
+    "bg-gradient-to-br from-[#571098]/50 via-[#973aa8]/60 to-[#ea698b]/50",
+    "bg-gradient-to-br from-[#a8dadc]/50 via-[#457b9d]/70 to-[#1B3354]/60",
+    "bg-gradient-to-b from-[#001F54]/70 via-[#D14081]/55 to-[#001F54]/70",
+    "bg-gradient-to-br from-[#FFD9DA]/65 via-[#ea638c]/65 to-[#89023e]/65",
+  ];
+  return colors[selectColor % colors.length];
+}
+
 const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const backButtonRef = useRef(null);
-  const topThreeSongs = items.slice(0, 3);
+  const itemNames = items.map((item) => item.name).join(" · ");
 
   const [artistData, setArtistData] = useState<ArtistData | null>({
     genres: [],
@@ -24,7 +36,13 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
 
   const [topArtistHref, setTopArtistHref] = useState("");
   const [sortedArtists, setSortedArtists] = useState(new Map<string, number>());
-  const [sortedByValue, setSortedByValue] = useState(new Map<string, number>());
+  const [sortedByValue, setSortedByValue] = useState<{ genre: string; key: string }[]>([]);
+  const [colorNumber, setColorNumber] = useState(0);
+  const [colorCombinations, setColorCombinations] = useState("");
+
+  useEffect(() => {
+    setColorCombinations(chooseColor(colorNumber));
+  }, [colorNumber]);
 
   useEffect(() => {
     const artistCounts = tallyArtist({ items });
@@ -44,8 +62,14 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
     }
     if (genreData) {
       const unsortedArray = Array.from(genreData.entries());
-      const sortedByValue = new Map(unsortedArray.sort((a, b) => b[1] - a[1]).splice(0, 3));
-      setSortedByValue(sortedByValue);
+      const sortedByValue = unsortedArray.sort((a, b) => b[1] - a[1]).splice(0, 3);
+      const displayGenres = sortedByValue.map((genre, index) => {
+        return {
+          genre: `${index + 1}. ${genre[0]}, `,
+          key: genre[0],
+        };
+      });
+      setSortedByValue(displayGenres);
     }
   }, [items, genreData]);
 
@@ -69,9 +93,12 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
         <button
           type="button"
           className="inline-flex items-center px-2.5 py-1.5 font-semibold leading-6 text-sm shadow rounded-md text-spotify-green bg-neutral-800"
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            setIsOpen(true);
+            setColorNumber(colorNumber + 1);
+          }}
         >
-          Summary
+          Share
         </button>
         <span className="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-spotify-green opacity-75"></span>
@@ -81,24 +108,26 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
       {isOpen && (
         <Transition.Root show={isOpen} as={Fragment}>
           <Dialog as="div" className="relative z-10" initialFocus={backButtonRef} onClose={setIsOpen}>
-            <div className="fixed inset-0 bg-grey-500 bg-opacity-85 transition-opacity backdrop-blur-sm" />
+            <div className="fixed inset-0 bg-grey-500 bg-opacity-85 backdrop-blur-sm" />
 
             <div className="fixed inset-0 z-10 w-screen">
-              <div className="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0">
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all w-full bg-slate-700 bg-opacity-80 backdrop-blur-xl drop-shadow">
+              <div className="flex min-h-full items-start justify-center p-4 text-center">
+                <Dialog.Panel
+                  className={`relative transform overflow-hidden rounded-lg text-left shadow-xl w-full backdrop-blur-xl drop-shadow 
+                ${colorCombinations}`}
+                >
                   <div className="px-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
-                      <div className="grid grid-cols-4 border-b-2">
+                      <div className="grid grid-cols-11 border-b-2 pb-1">
                         <Dialog.Title
                           as="h1"
-                          className="text-base font-semibold leading-6 text-slate-100 text-right row-span-3 col-span-3"
+                          className="text-xl font-semibold leading-6 text-slate-100 text-center col-start-2 col-span-9 content-center"
                         >
-                          Summary ≈ {dataRange}
+                          {`UnWrapped ${dataRange}`}
                         </Dialog.Title>
-                        <div />
                         <button
                           type="button"
-                          className="ml-auto rounded-md inline-flex items-center justify-center text-gray-400"
+                          className="ml-auto rounded-md inline-flex items-center justify-center text-gray-400 mb-3"
                           onClick={() => setIsOpen(false)}
                           ref={backButtonRef}
                         >
@@ -111,20 +140,20 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                             aria-hidden="true"
                           >
                             <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
                               d="M6 18L18 6M6 6l12 12"
                             />
                           </svg>
                         </button>
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                        <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
+                        <Dialog.Description as="div" className="mt-2 text-md font-bold text-slate-100">
                           Overall Top Artist
                         </Dialog.Description>
                         <div className="pb-2 border-b-2">
-                          <h3 className="font-bold font-3xl mt-2 text-slate-100">
+                          <h3 className="font-xl font-semibold mt-2 text-slate-100">
                             {sortedArtists.entries().next().value[0]}
                           </h3>
 
@@ -140,37 +169,21 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                             <div>Loading...</div>
                           )}
                         </div>
-                        <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
-                          Overall Top Songs
+                        <Dialog.Description as="div" className="mt-2 text-md font-semibold text-slate-100">
+                          Top 10
                         </Dialog.Description>
-                        <div className="pb-1 border-b-2">
-                          <ul className="divide-y divide-gray-200">
-                            {topThreeSongs.map((item, index) => (
-                              <li key={index} className="py-2 flex">
-                                <div className="flex w-0 flex-1 items-center">
-                                  <span className="ml-2 text-sm font-semibold text-slate-100 text-left">
-                                    {`${index + 1}. ${item.name}`}
-                                  </span>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
+                        <div className="border-b-2 pb-1">
+                          <span className="text-sm inline-block text-white opacity-70">{itemNames}</span>
                         </div>
-                        <Dialog.Description as="div" className="mt-2 text-sm text-slate-100">
+                        <Dialog.Description as="div" className="mt-2 text-md font-semibold text-slate-100">
                           Overall Top Genres
                         </Dialog.Description>
-                        <div className="pb-1">
-                          <ul className="divide-y divide-gray-200">
-                            {Array.from(sortedByValue).map((genre, index) => (
-                              <li key={index} className="py-2 flex">
-                                <div className="flex w-0 flex-1 items-center">
-                                  <span className="ml-2 text-sm font-semibold text-slate-100">
-                                    {`${index + 1}. ${genre[0]}`}
-                                  </span>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
+                        <div className="pb-2.5">
+                          {sortedByValue.map((genreObject) => (
+                            <span key={genreObject.key} className="ml-2 text-sm inline-block text-white opacity-70">
+                              {genreObject.genre}
+                            </span>
+                          ))}
                         </div>
                       </div>
                     </div>
