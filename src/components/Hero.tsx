@@ -8,10 +8,10 @@ const Hero: React.FC = () => {
   //title for the hero animation
   const title = "Welcome to UnWrapped";
   const router = useRouter();
-  const [isVisible, setIsVisible] = useState(true);
+  const [isDisclaimerVisible, setIsDisclaimerVisible] = useState(true);
 
   const handleClose = () => {
-    setIsVisible(false);
+    setIsDisclaimerVisible(false);
   };
 
   async function auth() {
@@ -75,7 +75,7 @@ const Hero: React.FC = () => {
           {/* disclaimer */}
           <div
             className={`transition-opacity duration-500 ease-in-out opacity-${
-              isVisible ? "100" : "0"
+              isDisclaimerVisible ? "100" : "0"
             } flex items-center p-4 rounded-lg bg-gray-800 text-yellow-300 mt-4`}
           >
             <svg
