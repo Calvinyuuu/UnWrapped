@@ -67,7 +67,7 @@ const Hero: React.FC = () => {
           </div>
           {/* redirects to /auth for spotify authentication */}
           <button
-            className="inline-block rounded border-2 border-info px-6 mt-2 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none hover:bg-cyan-950 focus:bg-cyan-950"
+            className="inline-block rounded border-2 border-info px-6 mt-2 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none hover:bg-cyan-950 focus:bg-cyan-950 w-3/4 sm:w-2/4"
             onClick={auth}
           >
             Authorize
