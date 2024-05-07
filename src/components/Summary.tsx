@@ -4,6 +4,7 @@ import { ResponseData } from "../interfaces/songInterface";
 import { ArtistData } from "../interfaces/artistInterface";
 import { CardData } from "../interfaces/cardInterface";
 import { getArtistInfo, getToken, tallyArtist } from "@/functions/apiFunctions";
+import { images } from "../constants";
 import Image from "next/image";
 
 function chooseColor(selectColor: number): string {
@@ -178,12 +179,26 @@ const Summary: React.FC<ResponseData & CardData> = ({ items, genreData, dataRang
                         <Dialog.Description as="div" className="mt-2 text-md font-semibold text-slate-100">
                           Overall Top Genres
                         </Dialog.Description>
-                        <div className="pb-2.5">
+                        <div className="pb-2.5 border-b-2">
                           {sortedByValue.map((genreObject) => (
                             <span key={genreObject.key} className="ml-2 text-sm inline-block text-white opacity-70">
                               {genreObject.genre}
                             </span>
                           ))}
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between m-2">
+                            <Image
+                              src={images[1].icon}
+                              alt="spotify logo"
+                              width={images[1].width - 20}
+                              height={images[1].height - 20}
+                              className="row-span-2"
+                            />
+                            <span className="text-sm font-bold inline-block text-white opacity-70">
+                              unwrapped-app.vercel.app
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
