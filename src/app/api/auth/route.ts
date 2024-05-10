@@ -15,7 +15,7 @@ function generateRandomString(length: number): string {
 //function to handle the GET request to get the code from spotify
 export async function GET(): Promise<Response> {
     //set the scope and state for the request
-    const scope = 'streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state user-library-read user-read-recently-played user-top-read';
+    const scope = 'user-top-read';
     const state = generateRandomString(16);
     const authUrl = 'https://accounts.spotify.com/authorize?'
     //set the state in a cookie for later verification
