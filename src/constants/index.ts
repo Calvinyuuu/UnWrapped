@@ -27,7 +27,7 @@ export const socials = [
   {
     name: "portfolio",
     icon: PATHS.logo,
-    link: "https://calvinyuuu.github.io/Portfolio_2023/"
+    link: "https://calvinyuuu.github.io/Portfolio/"
   },
   {
     name: "github",
